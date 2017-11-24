@@ -5,7 +5,7 @@ contract TokenDao {
     address internal llamador;
     uint256 internal sellPrice;
     uint256 internal buyPrice;
-    string internal name;
+    string internal name; 
     string internal symbol;
     uint8 internal decimals;
     mapping (address => uint) balanceOf;
