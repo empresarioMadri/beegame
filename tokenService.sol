@@ -1,31 +1,31 @@
 pragma solidity ^0.4.18;
 
-import 'https://github.com/empresarioMadri/beegame/tokenDAO.sol';
+import 'https://github.com/empresarioMadri/beegame/tokenDao.sol';
 
 contract TokenService {
 
     event Transfer(address indexed from, address indexed to, uint256 value);
     event TransferKO(address indexed from, address indexed to, uint256 value);
 
-    address tokenDAO;
-    TokenDAO internal tokenDAOImpl;
+    address tokenDao;
+    TokenDao internal tokenDaoImpl;
 
     function TokenService(
         address _llamador,
         uint256 initialSupply,
         uint256 newSellPrice,
         uint256 newBuyPrice) {
-        tokenDAO = new TokenDAO(_llamador,initialSuply,newSellPrice,newBuyPrice);
-        tokenDAOImpl = TokenDAO(tokenDAO);
+        tokenDAO = new TokenDao(_llamador,initialSuply,newSellPrice,newBuyPrice);
+        tokenDaoImpl = TokenDao(tokenDao);
 
     }
 
-    function changeTokenDAO(
+    function changeTokenDao(
         address _llamador,
         uint256 initialSupply,
         uint256 newSellPrice,
         uint256 newBuyPrice) public onlyLlamador {
-        tokenDAO = new TokenDAO(_llamador,initialSuply,newSellPrice,newBuyPrice);
+        tokenDao = new TokenDao(_llamador,initialSuply,newSellPrice,newBuyPrice);
     }
 
     function buy(value) public onlyLLamador returns (uint amount) {
@@ -42,17 +42,17 @@ contract TokenService {
 
     function _transfer(address _from, address _to, uint _value) internal {
         require(_to != 0x0);                               // Prevent transfer to 0x0 address. Use burn() instead
-        require(tokenDAOImpl.getBalanceOf(_from) >= _value);                // Check if the sender has enough
-        require(safeAdd(tokenDAOImpl.getBalanceOf(_to),_value) > tokenDAOImpl.getBalanceOf(_to)); // Check for overflows
-        tokenDAOImpl.getBalanceOf(_from) = safeSub(tokenDAOImpl.getBalanceOf(_from),_value);                         
-        tokenDAOImpl.getBalanceOf(_to) = safeAdd(tokenDAOImpl.getBalanceOf(_to),_value);                           
+        require(tokenDaoImpl.getBalanceOf(_from) >= _value);                // Check if the sender has enough
+        require(safeAdd(tokenDaoImpl.getBalanceOf(_to),_value) > tokenDaoImpl.getBalanceOf(_to)); // Check for overflows
+        tokenDaoImpl.getBalanceOf(_from) = safeSub(tokenDaoImpl.getBalanceOf(_from),_value);                         
+        tokenDaoImpl.getBalanceOf(_to) = safeAdd(tokenDaoImpl.getBalanceOf(_to),_value);                           
         Transfer(_from, _to, _value);
     }
 
     function sell(uint amount) public onlyLlamador {
-        require(tokenDAOImpl.getBalanceOf(msg.sender) >= amount);         
+        require(tokenDaoImpl.getBalanceOf(msg.sender) >= amount);         
         _transfer(msg.sender, owner, amount);
-        uint revenue = safeMul(amount,tokenDAOImpl.getSellPrice());
+        uint revenue = safeMul(amount,tokenDaoImpl.getSellPrice());
         if (msg.sender.send (revenue)) {                
             Transfer(msg.sender, owner, revenue);  
         }else {

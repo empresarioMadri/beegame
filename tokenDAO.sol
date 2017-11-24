@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-contract TokenDAO {
+contract TokenDao {
 
     address internal llamador;
     uint256 internal sellPrice;
@@ -10,7 +10,7 @@ contract TokenDAO {
     uint8 internal decimals;
     mapping (address => uint) balanceOf;
 
-    function TokenDAO(
+    function TokenDao(
         address _llamador,
         uint256 initialSupply,
         uint256 newSellPrice,
