@@ -23,8 +23,7 @@ contract owned {
 
 
 contract BeeGame is owned {
-    
-    
+
     address token;
 
     function BeeGame (
@@ -41,7 +40,31 @@ contract BeeGame is owned {
 
     function cambiarLlamador()public onlyOwner {
         Token contrato = Token(token);
+        contrato.cambiarLlamador(this);
+    }
 
+    function setPrices(uint256 newSellPrice, uint256 newBuyPrice) public onlyOwner {
+        Token contrato = Token(token);
+        contrato.setPrices(newSellPrice,newBuyPrice);
+    }
+
+    function buy() public payable returns (uint amount) {
+        Token contrato = Token(token);
+        contrato.buy(msg.value);
+    }
+
+    function sell(uint amount) public {
+        Token contrato = Token(token);
+        contrato.sell(amount);
+    }
+
+    function getBalance(address addr) public view returns(uint) {
+		Token contrato = Token(token);
+        return contrato.getBalance(addr);
+	}
+
+    function getOwner() public view returns(address) {
+        return owner;
     }
 
     
