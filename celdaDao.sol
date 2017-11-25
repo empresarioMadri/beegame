@@ -42,11 +42,6 @@ contract CeldaDao {
         celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
     }
 
-    function getCeldasO(uint256 id) public view returns(TiposCompartidos.Celda) {
-        TiposCompartidos.Celda memory celda = celdas[id];
-        return celda;
-    }
-
     function setCeldas(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
         uint _primeraPosicion, uint _segundaPosicion, uint _terceraPosicion,
         uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TiposCompartidos.TipoPremio _tipo, bool _premio) public onlyLlamador {
@@ -65,11 +60,6 @@ contract CeldaDao {
             premio:_premio
         });
         celdas[_fechaCreacion] = celda;
-    }
-
-    function setCeldasO(uint _fechaCreacion, 
-        TiposCompartidos.Celda _celda) public onlyLlamador {
-        celdas[_fechaCreacion] = _celda;
     }
 
     function cambiarLlamador(address _llamador) public onlyOwner {
