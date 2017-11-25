@@ -93,7 +93,7 @@ contract BeeGame is owned {
         mensajeDao = new MensajeDao(this);
         mensajeDaoImpl = MensajeDao(mensajeDao);
 
-        tokenDao = new TokenDao(this);
+        tokenDao = new TokenDao(this,initialSupply,newSellPrice,newBuyPrice);
         tokenDaoImpl = TokenDao(tokenDao);
 
         usuarioDao = new UsuarioDao(this);
@@ -101,7 +101,7 @@ contract BeeGame is owned {
 
 
         fechaTax = _fechaTax;
-        tokenDaoImpl.setBalanceOf(owner,initialSupply);
+        tokenDaoImpl.setBalance(owner,initialSupply);
         setPrices(newSellPrice,newBuyPrice);
         celdaDaoImpl.setNumeroCeldas(0);
         tokenDaoImpl.setName("Beether");
