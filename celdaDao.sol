@@ -48,7 +48,7 @@ contract CeldaDao {
     function getCeldas(uint256 id) public view returns(
         address creador, uint polenPositivos, uint polenNegativos, uint fechaCreacion, 
         uint primeraPosicion, uint segundaPosicion, uint terceraPosicion,
-        uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
+        uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TipoPremio tipo, bool premio) {
         
         Celda memory celda = celdas[id];
         return (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion,
