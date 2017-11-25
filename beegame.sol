@@ -1,5 +1,6 @@
 pragma solidity ^0.4.18;
 
+import 'https://github.com/empresarioMadri/beegame/owned.sol';
 import 'https://github.com/empresarioMadri/beegame/boteDao.sol';
 import 'https://github.com/empresarioMadri/beegame/celdaDao.sol';
 import 'https://github.com/empresarioMadri/beegame/mensajeDao.sol';
@@ -7,36 +8,22 @@ import 'https://github.com/empresarioMadri/beegame/tokenDao.sol';
 import 'https://github.com/empresarioMadri/beegame/usuarioDao.sol';
 import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
 
-contract owned {
-    address public owner;
-
-    function owned() public {
-        owner = msg.sender;
-    }
-
-    modifier onlyOwner {
-        require(msg.sender == owner);
-        _;
-    }
-
-    function transferOwnership(address newOwner) public onlyOwner {
-        owner = newOwner;
-    }
-}
-
 contract BeeGame is owned {
 
     address tokenDao;
-    TokenDao internal tokenDaoImpl;
+    TokenDao tokenDaoImpl;
 
+    address celdaDao; 
     CeldaDao celdaDaoImpl;
 
+    address mensajeDao;
     MensajeDao mensajeDaoImpl;
 
+    address boteDao;
     BoteDao boteDaoImpl;
 
     address usuarioDao;
-    UsuarioDao internal usuarioDaoImpl;
+    UsuarioDao usuarioDaoImpl;
     
     uint fechaTax;
 
@@ -49,18 +36,21 @@ contract BeeGame is owned {
         uint256 newSellPrice,
         uint256 newBuyPrice,
         uint _fechaTax) public {
-        boteDaoImpl = new BoteDao(this);
+            
+        boteDao = new BoteDao(this);
+        boteDaoImpl = BoteDao(boteDao);
 
-        celdaDaoImpl = new CeldaDao(this);
+        celdaDao = new CeldaDao(this);
+        celdaDaoImpl = CeldaDao(celdaDao);
 
-        mensajeDaoImpl = new MensajeDao(this);
+        mensajeDao = new MensajeDao(this);
+        mensajeDaoImpl = MensajeDao(mensajeDao);
 
-        tokenDao = new TokenDao(this,initialSupply,newSellPrice,newBuyPrice);
+        tokenDao = new TokenDao(initialSupply,newSellPrice,newBuyPrice);
         tokenDaoImpl = TokenDao(tokenDao);
 
         usuarioDao = new UsuarioDao(this);
         usuarioDaoImpl = UsuarioDao(usuarioDao);
-
 
         fechaTax = _fechaTax;
         tokenDaoImpl.setBalance(owner,initialSupply);
