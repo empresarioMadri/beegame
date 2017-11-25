@@ -1,10 +1,11 @@
 pragma solidity ^0.4.18;
 
 import 'https://github.com/empresarioMadri/beegame/owned.sol';
+import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
 import 'https://github.com/empresarioMadri/beegame/boteDao.sol';
-import 'https://github.com/empresarioMadri/beegame/celdaDao.sol';
 import 'https://github.com/empresarioMadri/beegame/mensajeDao.sol';
-import 'https://github.com/empresarioMadri/beegame/tokenDao.sol';
+import 'https://github.com/empresarioMadri/beegame/CeldaDao.sol';
+import 'https://github.com/empresarioMadri/beegame/TokenDao.sol';
 import 'https://github.com/empresarioMadri/beegame/usuarioDao.sol';
 import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
 
@@ -31,53 +32,23 @@ contract BeeGame is Owned {
 
     event TransferKO(address indexed from, address indexed to, uint256 value);
     
-    function BeeGame (
-        uint256 initialSupply,
-        uint256 newSellPrice,
-        uint256 newBuyPrice,
-        uint _fechaTax) public {
+    function BeeGame (uint _fechaTax) public {
+        
+        
             
-        boteDao = new BoteDao();
         boteDaoImpl = BoteDao(boteDao);
 
-        celdaDao = new CeldaDao();
         celdaDaoImpl = CeldaDao(celdaDao);
 
-        mensajeDao = new MensajeDao();
         mensajeDaoImpl = MensajeDao(mensajeDao);
 
-        tokenDao = new TokenDao(initialSupply,newSellPrice,newBuyPrice);
         tokenDaoImpl = TokenDao(tokenDao);
 
-        usuarioDao = new UsuarioDao();
         usuarioDaoImpl = UsuarioDao(usuarioDao);
 
-        fechaTax = _fechaTax;
-        tokenDaoImpl.setBalance(owner,initialSupply);
-        setPrices(newSellPrice,newBuyPrice);
-        celdaDaoImpl.setNumeroCeldas(0);
-        tokenDaoImpl.setName("Beether");
-        tokenDaoImpl.setSymbol("beeth"); 
-        tokenDaoImpl.setDecimals(2);
-        celdaDaoImpl.setIndiceCeldas(1509302402021);
-        celdaDaoImpl.setNumeroCeldas(safeAdd(celdaDaoImpl.getNumeroCeldas(),1));
-        usuarioDaoImpl.setNumeroUsuarios(safeAdd(usuarioDaoImpl.getNumeroUsuarios(),1));
-        usuarioDaoImpl.setIndiceUsuarios(msg.sender);
-        TiposCompartidos.Celda memory celda = TiposCompartidos.Celda({
-            creador:msg.sender,
-            polenPositivos : 0, 
-            polenNegativos : 3,
-            fechaCreacion: 1509302402021,
-            primeraPosicion : 0,
-            segundaPosicion : 0,
-            terceraPosicion : 0,
-            cuartaPosicion : 0,
-            quintaPosicion : 0,
-            sextaPosicion : 0,
-            tipo:TiposCompartidos.TipoPremio.none,
-            premio:false
-        });
-        setCeldasO(celda);
+        fechaTax = _fechaTax; 
+        
+        
     }
     
     
@@ -95,7 +66,7 @@ contract BeeGame is Owned {
         for (uint i = 0; i < usuarioDaoImpl.getNumeroUsuarios(); i++) {
             address usuario = usuarioDaoImpl.getIndiceUsuarios(i);
             if (tokenDaoImpl.getBalance(usuario) > 0) {
-                retorno = safeAdd(retorno,1);
+                retorno = TiposCompartidos.safeAdd(retorno,1);
             }
         }
         return retorno;
@@ -107,14 +78,14 @@ contract BeeGame is Owned {
             address usuario = usuarioDaoImpl.getIndiceUsuarios(i);
             if (tokenDaoImpl.getBalance(usuario) > 0) {
                 _transfer(usuario, owner, 1);
-                bote = safeAdd(bote,1);
+                bote = TiposCompartidos.safeAdd(bote,1);
             }
         }
         address premiado = usuarioDaoImpl.getIndiceUsuarios(ganador);
         _transfer(owner, premiado, bote);
         boteDaoImpl.setBotes(premiado,_fechaTax,bote);
         boteDaoImpl.setIndiceBotes(_fechaTax);
-        boteDaoImpl.setNumeroBotes(safeAdd(boteDaoImpl.getNumeroBotes(), 1));
+        boteDaoImpl.setNumeroBotes(TiposCompartidos.safeAdd(boteDaoImpl.getNumeroBotes(), 1));
 
         fechaTax = _fechaTax;
     }
@@ -175,7 +146,7 @@ contract BeeGame is Owned {
                 });
             }
             celdaDaoImpl.setIndiceCeldas(_fechaCreacion);
-            celdaDaoImpl.setNumeroCeldas(safeAdd(celdaDaoImpl.getNumeroCeldas(), 1));
+            celdaDaoImpl.setNumeroCeldas(TiposCompartidos.safeAdd(celdaDaoImpl.getNumeroCeldas(), 1));
         }
         setCeldasO(celda);
         TiposCompartidos.Celda memory celdaAbuelo = getCeldaO(_celdaAbuelo);
@@ -207,14 +178,14 @@ contract BeeGame is Owned {
             celdaPadre.sextaPosicion = _fechaCreacion;
         }
         if (_celdaAbuelo != 0 && !celda.premio) {
-            _transfer(repartidor,celdaPadre.creador,safeMul(2,multiplicador));
-            celdaPadre.polenPositivos = safeAdd(celdaPadre.polenPositivos,safeMul(2,multiplicador));
-            celdaAbuelo.polenPositivos = safeAdd(celdaAbuelo.polenPositivos,safeMul(1,multiplicador));
-            _transfer(repartidor,celdaAbuelo.creador,safeMul(1,multiplicador));
+            _transfer(repartidor,celdaPadre.creador,TiposCompartidos.safeMul(2,multiplicador));
+            celdaPadre.polenPositivos = TiposCompartidos.safeAdd(celdaPadre.polenPositivos,TiposCompartidos.safeMul(2,multiplicador));
+            celdaAbuelo.polenPositivos = TiposCompartidos.safeAdd(celdaAbuelo.polenPositivos,TiposCompartidos.safeMul(1,multiplicador));
+            _transfer(repartidor,celdaAbuelo.creador,TiposCompartidos.safeMul(1,multiplicador));
             setCeldasO(celdaAbuelo);
         }else if (!celda.premio) {
-            _transfer(repartidor,celdaPadre.creador,safeMul(3,multiplicador));
-            celdaPadre.polenPositivos = safeAdd(celdaPadre.polenPositivos,safeMul(3,multiplicador));
+            _transfer(repartidor,celdaPadre.creador,TiposCompartidos.safeMul(3,multiplicador));
+            celdaPadre.polenPositivos = TiposCompartidos.safeAdd(celdaPadre.polenPositivos,TiposCompartidos.safeMul(3,multiplicador));
         }
         setCeldasO(celdaPadre);
     }
@@ -250,8 +221,7 @@ contract BeeGame is Owned {
         (celda.creador,celda.polenPositivos,celda.polenNegativos
         ,celda.primeraPosicion,celda.segundaPosicion
         ,celda.terceraPosicion, celda.cuartaPosicion) = celdaDaoImpl.getCeldas1(id);
-        (celda.quintaPosicion
-        ,celda.sextaPosicion,celda.tipo,celda.premio) = celdaDaoImpl.getCeldas2(id);
+        (celda.quintaPosicion,celda.sextaPosicion,celda.tipo,celda.premio) = celdaDaoImpl.getCeldas2(id);
         celda.fechaCreacion = id;
         return celda;
     }
@@ -272,7 +242,7 @@ contract BeeGame is Owned {
         }
         require(encontrado);
         mensajeDaoImpl.setIndiceMensajes(_fechaCreacion);
-        mensajeDaoImpl.setNumeroMensajes(safeAdd(mensajeDaoImpl.getNumeroMensajes(),1));
+        mensajeDaoImpl.setNumeroMensajes(TiposCompartidos.safeAdd(mensajeDaoImpl.getNumeroMensajes(),1));
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:msg.sender,
             apodo:_apodo,
@@ -332,7 +302,7 @@ contract BeeGame is Owned {
     function sell(uint amount) public {
         require(tokenDaoImpl.getBalance(msg.sender) >= amount);         
         _transfer(msg.sender, owner, amount);
-        uint revenue = safeMul(amount,tokenDaoImpl.getSellPrice());
+        uint revenue = TiposCompartidos.safeMul(amount,tokenDaoImpl.getSellPrice());
         if (msg.sender.send (revenue)) {                
             Transfer(msg.sender, owner, revenue);  
         }else {
@@ -355,7 +325,7 @@ contract BeeGame is Owned {
         }
         if (!encontrado){
             usuarioDaoImpl.setIndiceUsuarios(usuario);
-            usuarioDaoImpl.setNumeroUsuarios(safeAdd(usuarioDaoImpl.getNumeroUsuarios(),1));
+            usuarioDaoImpl.setNumeroUsuarios(TiposCompartidos.safeAdd(usuarioDaoImpl.getNumeroUsuarios(),1));
         }
     }
 
@@ -372,26 +342,9 @@ contract BeeGame is Owned {
     function _transfer(address _from, address _to, uint _value) internal {
         require(_to != 0x0);                               // Prevent transfer to 0x0 address. Use burn() instead
         require(tokenDaoImpl.getBalance(_from) >= _value);                // Check if the sender has enough
-        require(safeAdd(tokenDaoImpl.getBalance(_to),_value) > tokenDaoImpl.getBalance(_to)); // Check for overflows
-        tokenDaoImpl.setBalance(_from,safeSub(tokenDaoImpl.getBalance(_from),_value));                         
-        tokenDaoImpl.setBalance(_to,safeAdd(tokenDaoImpl.getBalance(_to),_value));                           
+        require(TiposCompartidos.safeAdd(tokenDaoImpl.getBalance(_to),_value) > tokenDaoImpl.getBalance(_to)); // Check for overflows
+        tokenDaoImpl.setBalance(_from,TiposCompartidos.safeSub(tokenDaoImpl.getBalance(_from),_value));                         
+        tokenDaoImpl.setBalance(_to,TiposCompartidos.safeAdd(tokenDaoImpl.getBalance(_to),_value));                           
         Transfer(_from, _to, _value);
-    }
-
-    function safeMul(uint a, uint b) internal pure returns (uint) {
-        uint c = a * b;
-        assert(a == 0 || c / a == b);
-        return c;
-    }
-
-    function safeSub(uint a, uint b) internal pure returns (uint) {
-        assert(b <= a);
-        return a - b;
-    }
-
-    function safeAdd(uint a, uint b) internal pure returns (uint) {
-        uint c = a + b;
-        assert(c>=a && c>=b);
-        return c;
     }
 }
