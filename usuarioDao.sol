@@ -17,7 +17,7 @@ contract UsuarioDao {
         numeroUsuarios = numero;
     }
 
-    function getIndiceUsuarios(uint index) public view {
+    function getIndiceUsuarios(uint index) public view returns (address) {
         return indiceUsuarios[index];
     }
 
