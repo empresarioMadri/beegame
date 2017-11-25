@@ -1,5 +1,6 @@
 pragma solidity ^0.4.18;
 
+import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
 
 contract CeldaDao {
 
@@ -16,7 +17,7 @@ contract CeldaDao {
         uint cuartaPosicion;
         uint quintaPosicion;
         uint sextaPosicion;
-        TipoPremio tipo;
+        TiposCompartidos.TipoPremio tipo;
         bool premio;
     }
 
@@ -50,7 +51,7 @@ contract CeldaDao {
     function getCeldas(uint256 id) public view returns(
         address creador, uint polenPositivos, uint polenNegativos, uint fechaCreacion, 
         uint primeraPosicion, uint segundaPosicion, uint terceraPosicion,
-        uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TipoPremio tipo, bool premio) {
+        uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
         
         Celda memory celda = celdas[id];
         return (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion,
@@ -65,7 +66,7 @@ contract CeldaDao {
 
     function setCeldas(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
         uint _primeraPosicion, uint _segundaPosicion, uint _terceraPosicion,
-        uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TipoPremio _tipo, bool _premio) public onlyLlamador {
+        uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TiposCompartidos.TipoPremio _tipo, bool _premio) public onlyLlamador {
         Celda memory celda = Celda({
             creador:msg.sender,
             polenPositivos : _polenPositivos, 

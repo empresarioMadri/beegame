@@ -263,7 +263,7 @@ contract BeeGame is owned {
 
     function getMensaje(uint index) public view returns(address creador,uint fechaCreacion,string _mensaje,string apodo, TiposCompartidos.EstadoMensaje estado, string motivo){
         uint256 indexA = mensajeDaoImpl.getIndiceMensajes(index);
-        Mensaje memory mensaje = mensajeDaoImpl.getMensajes(indexA);
+        TiposCompartidos.Mensaje memory mensaje = mensajeDaoImpl.getMensajes(indexA);
         return (mensaje.creador,mensaje.fechaCreacion,mensaje.mensaje,mensaje.apodo,mensaje.estado,mensaje.motivo);
     }
 
@@ -278,7 +278,7 @@ contract BeeGame is owned {
         require(encontrado);
         mensajeDaoImpl.setIndiceMensajes(_fechaCreacion);
         mensajeDaoImpl.setNumeroMensajes(safeAdd(mensajeDaoImpl.getNumeroMensajes(),1));
-        Mensaje memory mensaje = Mensaje({
+        TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:msg.sender,
             apodo:_apodo,
             fechaCreacion:_fechaCreacion,
@@ -290,7 +290,7 @@ contract BeeGame is owned {
     }
 
     function aprobarMensaje(uint256 _fechaCreacion,TiposCompartidos.EstadoMensaje _estado,string _motivo) public onlyOwner {
-        Mensaje memory mensaje = mensajeDaoImpl.getMensajesO(_fechaCreacion);
+        TiposCompartidos.Mensaje memory mensaje = mensajeDaoImpl.getMensajesO(_fechaCreacion);
         mensaje.estado = _estado;
         mensaje.motivo = _motivo;
         mensajeDaoImpl.setMensajesO(_fechaCreacion, mensaje);
