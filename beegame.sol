@@ -37,19 +37,19 @@ contract BeeGame is Owned {
         uint256 newBuyPrice,
         uint _fechaTax) public {
             
-        boteDao = new BoteDao(this);
+        boteDao = new BoteDao();
         boteDaoImpl = BoteDao(boteDao);
 
-        celdaDao = new CeldaDao(this);
+        celdaDao = new CeldaDao();
         celdaDaoImpl = CeldaDao(celdaDao);
 
-        mensajeDao = new MensajeDao(this);
+        mensajeDao = new MensajeDao();
         mensajeDaoImpl = MensajeDao(mensajeDao);
 
         tokenDao = new TokenDao(initialSupply,newSellPrice,newBuyPrice);
         tokenDaoImpl = TokenDao(tokenDao);
 
-        usuarioDao = new UsuarioDao(this);
+        usuarioDao = new UsuarioDao();
         usuarioDaoImpl = UsuarioDao(usuarioDao);
 
         fechaTax = _fechaTax;
