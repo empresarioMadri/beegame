@@ -46,7 +46,7 @@ contract CeldaDao {
         uint _primeraPosicion, uint _segundaPosicion, uint _terceraPosicion,
         uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TiposCompartidos.TipoPremio _tipo, bool _premio) public onlyLlamador {
         TiposCompartidos.Celda memory celda = TiposCompartidos.Celda({
-            creador:msg.sender,
+            creador:_creador,
             polenPositivos : _polenPositivos, 
             polenNegativos : _polenNegativos,
             fechaCreacion: _fechaCreacion,

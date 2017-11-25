@@ -45,7 +45,7 @@ contract BoteDao {
 
     function setBotes(address creador,uint256 _fechaCreacion,uint _polenes) public onlyLlamador {
         TiposCompartidos.Bote memory bote = TiposCompartidos.Bote({
-            premiado:msg.sender,
+            premiado:creador,
             fechaCreacion:_fechaCreacion,
             polenes:_polenes
         });

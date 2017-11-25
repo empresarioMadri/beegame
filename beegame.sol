@@ -256,8 +256,7 @@ contract BeeGame is owned {
     function setCeldasO(TiposCompartidos.Celda celda) internal {
         celdaDaoImpl.setCeldas(celda.creador,celda.polenPositivos,celda.polenNegativos
             ,celda.fechaCreacion,celda.primeraPosicion,celda.segundaPosicion,celda.terceraPosicion,celda.cuartaPosicion
-            ,celda.quintaPosicion,celda.sextaPosicion,celda.tipo,celda.premio
-
+            ,celda.quintaPosicion,celda.sextaPosicion,celda.tipo,celda.premio);
     }
 
     function getBote(uint index) public view returns (address premiado, uint polenes, uint256 fechaCreacion){
