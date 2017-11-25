@@ -1,20 +1,11 @@
 pragma solidity ^0.4.18;
 
+import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
+
 contract MensajeDao {
 
-    enum EstadoMensaje{pendiente,aprobado,rechazado}
-
-    struct Mensaje {
-        address creador;
-        string apodo;
-        uint256 fechaCreacion;
-        string mensaje;
-        EstadoMensaje estado;
-        string motivo;
-    }
-
     uint internal numeroMensajes;
-    mapping (uint256 => Mensaje) mensajes;
+    mapping (uint256 => TiposCompartidos.Mensaje) mensajes;
     uint256[] indiceMensajes;
     address llamador;
 
@@ -44,18 +35,18 @@ contract MensajeDao {
         address creador, string apodo, uint256 fechaCreacion, 
         string mensaje, EstadoMensaje estado, string motivo) {
         
-        Mensaje memory mensajeO = mensajes[id];
+        TiposCompartidos.Mensaje memory mensajeO = mensajes[id];
         return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
     function getMensajesO(uint256 id) public view returns(
-        Mensaje mensaje) {
-        Mensaje memory mensajeO = mensajes[id];
+        TiposCompartidos.Mensaje mensaje) {
+        TiposCompartidos.Mensaje memory mensajeO = mensajes[id];
         return mensajeO;
     }
 
     function setMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje,EstadoMensaje _estado, string _motivo) public onlyLlamador {
-        Mensaje memory mensaje = Mensaje({
+        TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:msg.sender,
             apodo:_apodo,
             fechaCreacion:_fechaCreacion,
@@ -66,7 +57,7 @@ contract MensajeDao {
         mensajes[_fechaCreacion] = mensaje;
     }
 
-    function setMensajeO(uint256 _fechaCreacion, Mensaje mensaje) public onlyLlamador {
+    function setMensajeO(uint256 _fechaCreacion, TiposCompartidos.Mensaje mensaje) public onlyLlamador {
         mensajes[_fechaCreacion] = mensaje;
     }
 
