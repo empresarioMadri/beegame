@@ -1,7 +1,6 @@
 pragma solidity ^0.4.18;
 
 import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
-import 'https://github.com/empresarioMadri/beegame/owned.sol';
 
 contract BoteDao is Owned {
 
