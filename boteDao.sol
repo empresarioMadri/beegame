@@ -1,5 +1,6 @@
 pragma solidity ^0.4.18;
 
+import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
 
 contract BoteDao {
 
