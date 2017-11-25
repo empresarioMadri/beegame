@@ -9,6 +9,7 @@ contract CeldaDao {
     uint256[] internal indiceCeldas;
     address internal llamador;
     address internal owner;
+    TiposCompartidos.Celda internal celdaTemp;
 
     function CeldaDao(address _llamador) public {
         llamador = _llamador;
@@ -48,24 +49,19 @@ contract CeldaDao {
         return (celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
     }
 
-    function setCeldas(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
+    function setCeldas1(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
         uint _primeraPosicion, uint _segundaPosicion, uint _terceraPosicion,
-        uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TiposCompartidos.TipoPremio _tipo, bool _premio) public onlyLlamador {
-        TiposCompartidos.Celda memory celda = TiposCompartidos.Celda({
-            creador:_creador,
-            polenPositivos : _polenPositivos, 
-            polenNegativos : _polenNegativos,
-            fechaCreacion: _fechaCreacion,
-            primeraPosicion : _primeraPosicion,
-            segundaPosicion : _segundaPosicion,
-            terceraPosicion : _terceraPosicion,
-            cuartaPosicion : _cuartaPosicion,
-            quintaPosicion : _quintaPosicion,
-            sextaPosicion : _sextaPosicion,
-            tipo:_tipo,
-            premio:_premio
-        });
-        celdas[_fechaCreacion] = celda;
+        uint _cuartaPosicion) public onlyLlamador {
+        celdaTemp.creador = creador;
+        celdaTemp.polenPositivos = polenPositivos; 
+        celdaTemp.polenNegativos = polenNegativos;
+        celdaTemp.fechaCreacion = fechaCreacion;
+        celdaTemp.primeraPosicion = primeraPosicion;
+        celdaTemp.segundaPosicion = segundaPosicion;
+        celdaTemp.terceraPosicion = terceraPosicion;
+        celdaTemp.cuartaPosicion = cuartaPosicion;
+            
+        celdas[_fechaCreacion] = celdaTemp;
     }
 
     function cambiarLlamador(address _llamador) public onlyOwner {
