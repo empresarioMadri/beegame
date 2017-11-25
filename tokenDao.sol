@@ -1,23 +1,21 @@
 pragma solidity ^0.4.18;
 
-contract TokenDao {
+contract TokenDAO {
 
     address internal llamador;
     uint256 internal sellPrice;
     uint256 internal buyPrice;
-    string internal name; 
+    string internal name;
     string internal symbol;
     uint8 internal decimals;
     mapping (address => uint) balanceOf;
 
-    function TokenDao(
-        address _llamador,
+    function TokenDAO(
         uint256 initialSupply,
         uint256 newSellPrice,
         uint256 newBuyPrice) public 
     {
-        llamador = _llamador;
-        balanceOf[msg.sender] = initialSupply;
+        balanceOf[llamador] = initialSupply;
         sellPrice = newSellPrice;
         buyPrice = newBuyPrice;
         name = "Beether";
@@ -25,7 +23,7 @@ contract TokenDao {
         decimals = 2;
     }
 
-    function setDecimals(uint8 _decimals) public{
+    function setDecimals(uint8 _decimals) internal {
         decimals = _decimals;
     }
     
@@ -33,7 +31,7 @@ contract TokenDao {
         return decimals;
     }
 
-    function setName(string _name) public{
+    function setName(string _name) internal {
         name = _name;
     }
     
@@ -41,7 +39,7 @@ contract TokenDao {
         return name;
     }
 
-    function setSymbol(string _symbol) public{
+    function setSymbol(string _symbol) internal {
         symbol = _symbol;
     }
     
@@ -53,7 +51,7 @@ contract TokenDao {
         return sellPrice;
     }
 
-    function setSellPrice(uint256 _sellPrice) public{
+    function setSellPrice(uint256 _sellPrice) internal {
         sellPrice = _sellPrice;
     }
 
@@ -61,7 +59,7 @@ contract TokenDao {
         return buyPrice;
     }
 
-    function setBuyPrice(uint256 _buyPrice) public{
+    function setBuyPrice(uint256 _buyPrice) internal {
         sellPrice = _buyPrice;
     }
 
@@ -69,17 +67,7 @@ contract TokenDao {
 		return balanceOf[addr];
 	}
 
-    function setBalance(address addr,uint value) public {
-		balanceOf[addr] = value;
+    function setBalance(address addr,uint value) internal {
+		balanceOf[addr] = value;;
 	}
-
-    function cambiarLlamador(address _llamador) public onlyLlamador {
-        llamador = _llamador;
-    }
-
-    modifier onlyLlamador {
-        require(msg.sender == llamador);
-        _;
-    }
-
 }
