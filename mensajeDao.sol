@@ -51,10 +51,6 @@ contract MensajeDao {
         mensajes[_fechaCreacion] = mensaje;
     }
 
-    function setMensajesO(uint256 _fechaCreacion, TiposCompartidos.Mensaje mensaje) public onlyLlamador {
-        mensajes[_fechaCreacion] = mensaje;
-    }
-
     function cambiarLlamador(address _llamador) public onlyLlamador {
         llamador = _llamador;
     }
