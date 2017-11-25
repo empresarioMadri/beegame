@@ -1,25 +1,22 @@
 pragma solidity ^0.4.18;
 
 import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
+import 'https://github.com/empresarioMadri/beegame/owned.sol';
 
-contract BoteDao {
+contract BoteDao is Owned {
 
     uint internal numeroBotes;
     mapping (uint256 => TiposCompartidos.Bote) botes;
     uint256[] indiceBotes;
-    address llamador;
 
-    function BoteDao(
-        address _llamador
-    ) public {
-        llamador = _llamador;
+    function BoteDao() public {
     }
 
     function getNumeroBotes() public view returns(uint) {
         return numeroBotes;
     }
 
-    function setNumeroBotes(uint numero) public onlyLlamador {
+    function setNumeroBotes(uint numero) public onlyOwner {
         numeroBotes = numero;
     }
 
@@ -27,7 +24,7 @@ contract BoteDao {
         return indiceBotes[indice];
     }
 
-    function setIndiceBotes(uint256 value) public onlyLlamador {
+    function setIndiceBotes(uint256 value) public onlyOwner {
         indiceBotes.push(value);
     }
 
@@ -37,22 +34,13 @@ contract BoteDao {
         return (bote.premiado,bote.fechaCreacion,bote.polenes);
     }
 
-    function setBotes(address creador,uint256 _fechaCreacion,uint _polenes) public onlyLlamador {
+    function setBotes(address creador,uint256 _fechaCreacion,uint _polenes) public onlyOwner {
         TiposCompartidos.Bote memory bote = TiposCompartidos.Bote({
             premiado:creador,
             fechaCreacion:_fechaCreacion,
             polenes:_polenes
         });
         botes[_fechaCreacion] = bote;
-    }
-
-    function cambiarLlamador(address _llamador) public onlyLlamador {
-        llamador = _llamador;
-    }
-
-    modifier onlyLlamador {
-        require(msg.sender == llamador);
-        _;
     }
 
 }

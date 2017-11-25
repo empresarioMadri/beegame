@@ -1,25 +1,22 @@
 pragma solidity ^0.4.18;
 
 import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
+import 'https://github.com/empresarioMadri/beegame/owned.sol';
 
-contract CeldaDao {
+contract CeldaDao is Owned {
 
     uint internal numeroCeldas;
     mapping (uint256 => TiposCompartidos.Celda) internal celdas;
     uint256[] internal indiceCeldas;
-    address internal llamador;
-    address internal owner;
 
-    function CeldaDao(address _llamador) public {
-        llamador = _llamador;
-        owner = msg.sender;
+    function CeldaDao() public {
     }
 
     function getNumeroCeldas() public view returns(uint) {
         return numeroCeldas;
     }
 
-    function setNumeroCeldas(uint numero) public onlyLlamador {
+    function setNumeroCeldas(uint numero) public onlyOwner {
         numeroCeldas = numero;
     }
 
@@ -27,7 +24,7 @@ contract CeldaDao {
         return indiceCeldas[indice];
     }
 
-    function setIndiceCeldas(uint256 value) public onlyLlamador {
+    function setIndiceCeldas(uint256 value) public onlyOwner {
         indiceCeldas.push(value);
     }
 
@@ -50,7 +47,7 @@ contract CeldaDao {
 
     function setCeldas(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
         uint _primeraPosicion, uint _segundaPosicion, uint _terceraPosicion,
-        uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TiposCompartidos.TipoPremio _tipo, bool _premio) public onlyLlamador {
+        uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TiposCompartidos.TipoPremio _tipo, bool _premio) public onlyOwner {
         TiposCompartidos.Celda memory celda = TiposCompartidos.Celda({
             creador:_creador,
             polenPositivos : _polenPositivos, 
@@ -66,20 +63,6 @@ contract CeldaDao {
             premio:_premio
         });
         celdas[_fechaCreacion] = celda;
-    }
-
-    function cambiarLlamador(address _llamador) public onlyOwner {
-        llamador = _llamador;
-    }
-
-    modifier onlyLlamador {
-        require(msg.sender == llamador);
-        _;
-    }
-
-    modifier onlyOwner {
-        require(msg.sender == owner);
-        _;
     }
 
 }

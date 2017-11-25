@@ -1,25 +1,23 @@
 pragma solidity ^0.4.18;
 
 import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
+import 'https://github.com/empresarioMadri/beegame/owned.sol';
 
-contract MensajeDao {
+contract MensajeDao is Owned {
 
     uint internal numeroMensajes;
     mapping (uint256 => TiposCompartidos.Mensaje) mensajes;
     uint256[] indiceMensajes;
-    address llamador;
 
-    function MensajeDao(
-        address _llamador
-    ) public {
-        llamador = _llamador;
+    function MensajeDao() public {
+        
     }
 
     function getNumeroMensajes() public view returns(uint) {
         return numeroMensajes;
     }
 
-    function setNumeroMensajes(uint numero) public onlyLlamador {
+    function setNumeroMensajes(uint numero) public onlyOwner {
         numeroMensajes = numero;
     }
 
@@ -27,7 +25,7 @@ contract MensajeDao {
         return indiceMensajes[indice];
     }
 
-    function setIndiceMensajes(uint256 value) public onlyLlamador {
+    function setIndiceMensajes(uint256 value) public onlyOwner {
         indiceMensajes.push(value);
     }
 
@@ -39,7 +37,7 @@ contract MensajeDao {
         return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
-    function setMensajes(uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje,TiposCompartidos.EstadoMensaje _estado, bytes32  _motivo) public onlyLlamador {
+    function setMensajes(uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje,TiposCompartidos.EstadoMensaje _estado, bytes32  _motivo) public onlyOwner {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:msg.sender,
             apodo:_apodo,
@@ -49,13 +47,5 @@ contract MensajeDao {
             motivo:_motivo
         });
         mensajes[_fechaCreacion] = mensaje;
-    }
-
-    function cambiarLlamador(address _llamador) public onlyLlamador {
-        llamador = _llamador;
-    }
-    modifier onlyLlamador {
-        require(msg.sender == llamador);
-        _;
     }
 }

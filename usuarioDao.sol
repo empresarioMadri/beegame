@@ -1,19 +1,20 @@
 pragma solidity ^0.4.18;
-contract UsuarioDao {
+
+import 'https://github.com/empresarioMadri/beegame/owned.sol';
+
+contract UsuarioDao is Owned {
 
     uint internal numeroUsuarios;
     address[] indiceUsuarios;
-    address llamador;
 
-    function UsuarioDao(address _llamador) public {
-        llamador = _llamador;
+    function UsuarioDao() public {
     }
 
     function getNumeroUsuarios() public view returns(uint) {
         return numeroUsuarios;
     }
 
-    function setNumeroUsuarios(uint numero) public onlyLlamador{
+    function setNumeroUsuarios(uint numero) public onlyOwner {
         numeroUsuarios = numero;
     }
 
@@ -21,16 +22,8 @@ contract UsuarioDao {
         return indiceUsuarios[index];
     }
 
-    function setIndiceUsuarios(address usuario) public onlyLlamador {
+    function setIndiceUsuarios(address usuario) public onlyOwner {
         indiceUsuarios.push(usuario);
     }
 
-    function cambiarLlamador(address _llamador) public onlyLlamador {
-        llamador = _llamador;
-    }
-
-    modifier onlyLlamador {
-        require(msg.sender == llamador);
-        _;
-    }
 }
