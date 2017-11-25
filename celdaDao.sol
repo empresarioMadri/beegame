@@ -20,14 +20,8 @@ contract CeldaDao {
         bool premio;
     }
 
-    struct Premio {
-        address premiado;
-        uint256 fechaCreacion;
-        uint polenes;
-    }
-
     uint internal numeroCeldas;
-    mapping (uint256 => TiposCompartidos.Celda) celdas;
+    mapping (uint256 => Celda) celdas;
     uint256[] indiceCeldas;
     address llamador;
 
