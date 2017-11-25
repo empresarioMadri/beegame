@@ -49,7 +49,7 @@ contract MensajeDao {
     }
 
     function setMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje,EstadoMensaje _estado, string motivo) public onlyLlamador {
-        mensajeO = Mensaje({
+        Mensaje memory mensaje = Mensaje({
             creador:msg.sender,
             apodo:_apodo,
             fechaCreacion:_fechaCreacion,
@@ -57,7 +57,7 @@ contract MensajeDao {
             estado:_estado,
             motivo:_motivo
         });
-        mensajes[_fechaCreacion] = mensajeO;
+        mensajes[_fechaCreacion] = mensaje;
     }
 
     function cambiarLlamador(address _llamador) public onlyLlamador {
