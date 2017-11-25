@@ -60,6 +60,9 @@ contract MensajeDao {
         mensajes[_fechaCreacion] = mensaje;
     }
 
+    function cambiarLlamador(address _llamador) public onlyLlamador {
+        llamador = _llamador;
+    }
     modifier onlyLlamador {
         require(msg.sender == llamador);
         _;

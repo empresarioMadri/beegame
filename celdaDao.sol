@@ -25,9 +25,7 @@ contract CeldaDao {
     uint256[] indiceCeldas;
     address llamador;
 
-    function CeldaDao(
-        address _llamador
-    ) {
+    function CeldaDao(address _llamador) public {
         llamador = _llamador;
     }
 
@@ -60,8 +58,7 @@ contract CeldaDao {
 
     function setCeldas(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
         uint _primeraPosicion, uint _segundaPosicion, uint _terceraPosicion,
-        uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TipoPremio _tipo, bool _premio)
-    {
+        uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TipoPremio _tipo, bool _premio) public onlyLlamador {
         Celda memory celda = Celda({
             creador:msg.sender,
             polenPositivos : _polenesPositivos, 
@@ -77,6 +74,10 @@ contract CeldaDao {
             premio:_premio
         });
         celdas[_fechaCreacion] = celda;
+    }
+
+    function cambiarLlamador(address _llamador) public onlyLlamador {
+        llamador = _llamador;
     }
 
     modifier onlyLlamador {
