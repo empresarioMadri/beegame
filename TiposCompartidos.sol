@@ -34,5 +34,11 @@ library TiposCompartidos {
         uint256 fechaCreacion;
         uint polenes;
     }
+
+    struct Bote {
+        address premiado;
+        uint256 fechaCreacion;
+        uint polenes;
+    }
     
 }
