@@ -61,8 +61,8 @@ contract CeldaDao {
         uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TipoPremio _tipo, bool _premio) public onlyLlamador {
         Celda memory celda = Celda({
             creador:msg.sender,
-            polenPositivos : _polenesPositivos, 
-            polenNegativos : _polenesNegativos,
+            polenPositivos : _polenPositivos, 
+            polenNegativos : _polenNegativos,
             fechaCreacion: _fechaCreacion,
             primeraPosicion : _primeraPosicion,
             segundaPosicion : _segundaPosicion,
