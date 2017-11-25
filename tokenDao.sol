@@ -17,7 +17,7 @@ contract TokenDao {
         uint256 newBuyPrice) public 
     {
         llamador = _llamador;
-        balanceOf[llamador] = initialSupply;
+        balanceOf[msg.sender] = initialSupply;
         sellPrice = newSellPrice;
         buyPrice = newBuyPrice;
         name = "Beether";
