@@ -17,7 +17,7 @@ contract TokenDao is Owned {
         uint256 newSellPrice,
         uint256 newBuyPrice) public 
     {
-        balanceOf[llamador] = initialSupply;
+        balanceOf[msg.sender] = initialSupply;
         sellPrice = newSellPrice;
         buyPrice = newBuyPrice;
         name = "Beether";
