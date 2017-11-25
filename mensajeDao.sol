@@ -16,6 +16,7 @@ contract MensajeDao {
     uint internal numeroMensajes;
     mapping (uint256 => Mensaje) mensajes;
     uint256[] indiceMensajes;
+    address llamador;
 
     function MensajeDao(
         address _llamador
@@ -48,7 +49,7 @@ contract MensajeDao {
     }
 
     function setMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje,EstadoMensaje _estado, string motivo) public onlyLlamador {
-        mensaje = Mensaje({
+        mensajeO = Mensaje({
             creador:msg.sender,
             apodo:_apodo,
             fechaCreacion:_fechaCreacion,
@@ -56,7 +57,7 @@ contract MensajeDao {
             estado:_estado,
             motivo:_motivo
         });
-        mensajes[_fechaCreacion] = mensaje;
+        mensajes[_fechaCreacion] = mensajeO;
     }
 
     function cambiarLlamador(address _llamador) public onlyLlamador {
