@@ -144,26 +144,34 @@ contract BeeGame is owned {
         fechaTax = _fechaTax;
     }
 
+    function getCeldaO(uint256 id) internal returns (TiposCompartidos.Celda){
+        TiposCompartidos.Celda memory celda;
+        (celda.creador,celda.polenPositivos,celda.polenNegativos
+        ,celda.fechaCreacion,celda.primeraPosicion,celda.segundaPosicion
+        ,celda.terceraPosicion, celda.cuartaPosicion,celda.quintaPosicion
+        ,celda.sextaPosicion,celda.tipo,celda.premio) = celdaDaoImpl.getCeldas(id);
+        return celda;
+    }
+
     function crearCelda(uint _polenes, uint256 _fechaCreacion, uint posicion, uint _celdaPadre, uint _celdaAbuelo, TiposCompartidos.TipoPremio tipo) public {
         require(tokenDaoImpl.getBalance(msg.sender)>=3);
         require(_polenes == 3);
         require(_celdaPadre != 0);
         require((posicion >= 0 && posicion < 7) || (posicion == 0 && msg.sender == owner));
         require(((tipo == TiposCompartidos.TipoPremio.free || tipo == TiposCompartidos.TipoPremio.x2 || tipo == TiposCompartidos.TipoPremio.x3 || tipo == TiposCompartidos.TipoPremio.x5 || tipo == TiposCompartidos.TipoPremio.surprise) && msg.sender == owner) || tipo == TiposCompartidos.TipoPremio.none);
-        TiposCompartidos.Celda memory celdaPadre;
-        celdaPadre = celdaDaoImpl.getCeldasO(_celdaPadre);
+        TiposCompartidos.Celda memory celdaPadre = getCeldaO(_celdaPadre);
         require(
-            ((posicion == 1 && celdaPadre.primeraPosicion == 0) || celdaDaoImpl.getCeldasO(celdaPadre.primeraPosicion).tipo != TiposCompartidos.TipoPremio.none ) || 
-            ((posicion == 2 && celdaPadre.segundaPosicion == 0) || celdaDaoImpl.getCeldasO(celdaPadre.segundaPosicion).tipo != TiposCompartidos.TipoPremio.none ) || 
-            ((posicion == 3 && celdaPadre.terceraPosicion == 0) || celdaDaoImpl.getCeldasO(celdaPadre.terceraPosicion).tipo != TiposCompartidos.TipoPremio.none ) || 
-            ((posicion == 4 && celdaPadre.cuartaPosicion == 0)  || celdaDaoImpl.getCeldasO(celdaPadre.cuartaPosicion).tipo != TiposCompartidos.TipoPremio.none ) || 
-            ((posicion == 5 && celdaPadre.quintaPosicion == 0)  || celdaDaoImpl.getCeldasO(celdaPadre.quintaPosicion).tipo != TiposCompartidos.TipoPremio.none ) || 
-            ((posicion == 6 && celdaPadre.sextaPosicion == 0) || celdaDaoImpl.getCeldasO(celdaPadre.sextaPosicion).tipo != TiposCompartidos.TipoPremio.none )
+            ((posicion == 1 && celdaPadre.primeraPosicion == 0) || getCeldaO(celdaPadre.primeraPosicion).tipo != TiposCompartidos.TipoPremio.none ) || 
+            ((posicion == 2 && celdaPadre.segundaPosicion == 0) || getCeldaO(celdaPadre.segundaPosicion).tipo != TiposCompartidos.TipoPremio.none ) || 
+            ((posicion == 3 && celdaPadre.terceraPosicion == 0) || getCeldaO(celdaPadre.terceraPosicion).tipo != TiposCompartidos.TipoPremio.none ) || 
+            ((posicion == 4 && celdaPadre.cuartaPosicion == 0)  || getCeldaO(celdaPadre.cuartaPosicion).tipo != TiposCompartidos.TipoPremio.none ) || 
+            ((posicion == 5 && celdaPadre.quintaPosicion == 0)  || getCeldaO(celdaPadre.quintaPosicion).tipo != TiposCompartidos.TipoPremio.none ) || 
+            ((posicion == 6 && celdaPadre.sextaPosicion == 0) || getCeldaO(celdaPadre.sextaPosicion).tipo != TiposCompartidos.TipoPremio.none )
         );
         TiposCompartidos.Celda memory celda;
         TiposCompartidos.TipoPremio tipoPremio;
-        if (celdaDaoImpl.getCeldasO(_fechaCreacion).fechaCreacion == _fechaCreacion) {
-            celda = celdaDaoImpl.getCeldasO(_fechaCreacion);
+        if (getCeldaO(_fechaCreacion).fechaCreacion == _fechaCreacion) {
+            celda = getCeldaO(_fechaCreacion);
             celda.creador = msg.sender;
             celda.premio = false;
             tipoPremio = celda.tipo;
@@ -204,7 +212,7 @@ contract BeeGame is owned {
             celdaDaoImpl.setNumeroCeldas(safeAdd(celdaDaoImpl.getNumeroCeldas(), 1));
         }
         celdaDaoImpl.setCeldasO(_fechaCreacion,celda);
-        TiposCompartidos.Celda memory celdaAbuelo = celdaDaoImpl.getCeldasO(_celdaAbuelo);
+        TiposCompartidos.Celda memory celdaAbuelo = getCeldaO(_celdaAbuelo);
         uint multiplicador = 1;
         address repartidor = msg.sender;
         if (tipoPremio == TiposCompartidos.TipoPremio.x2 && !celda.premio) {
@@ -255,7 +263,7 @@ contract BeeGame is owned {
                                             uint primeraPosicion, uint segundaPosicion, uint terceraPosicion,
                                             uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
         uint256 indexA = celdaDaoImpl.getIndiceCeldas(index);
-        TiposCompartidos.Celda memory  celda = celdaDaoImpl.getCeldasO(indexA);
+        TiposCompartidos.Celda memory  celda = getCeldaO(indexA);
         return (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion,
         celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion, celda.cuartaPosicion, 
         celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
