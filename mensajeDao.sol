@@ -14,7 +14,7 @@ contract MensajeDao {
     }
 
     uint internal numeroMensajes;
-    mapping (uint256 => TiposCompartidos.Mensaje) mensajes;
+    mapping (uint256 => Mensaje) mensajes;
     uint256[] indiceMensajes;
 
     function MensajeDao(
