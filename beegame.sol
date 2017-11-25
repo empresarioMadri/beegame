@@ -247,7 +247,7 @@ contract BeeGame is owned {
 
     function getBote(uint index) public view returns (address premiado, uint polenes, uint256 fechaCreacion){
         uint256 indexA = boteDaoImpl.getIndiceBotes(index);
-        TiposCompartidos.Bote memory bote = boteDaoImpl.getBotes(indexA);
+        TiposCompartidos.Bote memory bote = boteDaoImpl.getBotesO(indexA);
         return (bote.premiado, bote.polenes, bote.fechaCreacion);
     }
 
