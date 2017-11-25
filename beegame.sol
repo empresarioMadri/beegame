@@ -325,11 +325,11 @@ contract BeeGame is owned {
         Mensaje memory mensaje = mensajeDaoImpl.getMensajesO(_fechaCreacion);
         mensaje.estado = _estado;
         mensaje.motivo = _motivo;
-        mensajes[_fechaCreacion] = mensaje;
+        mensajeDaoImpl.setMensajesO(_fechaCreacion, mensaje);
     }
 
     function getBalance(address addr) public view returns(uint) {
-		return balanceOf[addr];
+		return tokenDaoImpl.getBalanceOf(addr);
 	}
 
     function getFechaTax() public view returns(uint) {
@@ -337,19 +337,19 @@ contract BeeGame is owned {
     }
 
     function getNumeroCeldas() public view returns(uint) {
-        return numeroCeldas;
+        return celdaDaoImpl.getNumeroCeldas();
     }
 
     function getNumeroUsuarios() public view returns(uint) {
-        return numeroUsuarios;
+        return usuarioDaoImpl.getNumeroUsuarios();
     }
 
-    function getNumeroPremios() public view returns(uint) {
-        return numeroPremios;
+    function getNumeroBotes() public view returns(uint) {
+        return boteDaoImpl.getNumeroBotes();
     }
 
     function getNumeroMensajes() public view returns(uint) {
-        return numeroMensajes;
+        return mensajeDaoImpl.getNumeroMensajes();
     }
 
     function getOwner() public view returns(address) {
@@ -361,9 +361,9 @@ contract BeeGame is owned {
     }
 
     function sell(uint amount) public {
-        require(balanceOf[msg.sender] >= amount);         
+        require(tokenDaoImpl.getBalanceOf(msg.sender) >= amount);         
         _transfer(msg.sender, owner, amount);
-        uint revenue = safeMul(amount,sellPrice);
+        uint revenue = safeMul(amount,tokenDaoImpl.getSellPrice());
         if (msg.sender.send (revenue)) {                
             Transfer(msg.sender, owner, revenue);  
         }else {
@@ -377,8 +377,8 @@ contract BeeGame is owned {
     }
 
     function setPrices(uint256 newSellPrice, uint256 newBuyPrice) public onlyOwner {
-        sellPrice = newSellPrice * 1 finney;
-        buyPrice = newBuyPrice * 1 finney;
+        tokenDaoImpl.setSellPrice(newSellPrice * 1 finney);
+        tokenDaoImpl.setBuyPrice(newBuyPrice * 1 finney);
     }
 
     function transfer(address _to, uint _value) public {
@@ -388,10 +388,10 @@ contract BeeGame is owned {
 
     function _transfer(address _from, address _to, uint _value) internal {
         require(_to != 0x0);                               // Prevent transfer to 0x0 address. Use burn() instead
-        require(balanceOf[_from] >= _value);                // Check if the sender has enough
-        require(safeAdd(balanceOf[_to],_value) > balanceOf[_to]); // Check for overflows
-        balanceOf[_from] = safeSub(balanceOf[_from],_value);                         
-        balanceOf[_to] = safeAdd(balanceOf[_to],_value);                           
+        require(tokenDaoImpl.getBalanceOf(_from) >= _value);                // Check if the sender has enough
+        require(safeAdd(tokenDaoImpl.getBalanceOf(_to),_value) > tokenDaoImpl.getBalanceOf(_to)); // Check for overflows
+        tokenDaoImpl.setBalanceOf(_from,safeSub(tokenDaoImpl.getBalanceOf(_from),_value));                         
+        tokenDaoImpl.setBalanceOf(_to,safeAdd(tokenDaoImpl.getBalanceOf(_to),_value));                           
         Transfer(_from, _to, _value);
     }
 

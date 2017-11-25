@@ -39,7 +39,7 @@ contract BoteDao {
     function getBotes(uint256 id) public view returns(
         address creador,uint256 fechaCreacion,uint polenes) {
         Bote memory bote = botes[id];
-        return (bote.creador,bote.fechaCreacion,bote.polenes);
+        return (bote.premiado,bote.fechaCreacion,bote.polenes);
     }
 
     function setBotes(address creador,uint256 _fechaCreacion,uint _polenes) public onlyLlamador {
