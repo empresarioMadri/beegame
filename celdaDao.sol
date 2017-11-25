@@ -56,6 +56,11 @@ contract CeldaDao {
         celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
     }
 
+    function getCeldasO(uint256 id) public view returns(Celda) {
+        Celda memory celda = celdas[id];
+        return celda;
+    }
+
     function setCeldas(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
         uint _primeraPosicion, uint _segundaPosicion, uint _terceraPosicion,
         uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TipoPremio _tipo, bool _premio) public onlyLlamador {
