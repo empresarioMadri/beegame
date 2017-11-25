@@ -24,9 +24,9 @@ library TiposCompartidos {
         address creador;
         string apodo;
         uint fechaCreacion;
-        bytes32 mensaje;
+        string mensaje;
         TiposCompartidos.EstadoMensaje estado;
-        bytes32 motivo;
+        string motivo;
     }
 
     struct Premio {
