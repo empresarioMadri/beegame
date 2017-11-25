@@ -44,7 +44,7 @@ contract BoteDao {
 
     function setBotes(address creador,uint256 _fechaCreacion,uint _polenes) public onlyLlamador {
         Bote memory bote = Bote({
-            creador:msg.sender,
+            premiado:msg.sender,
             fechaCreacion:_fechaCreacion,
             polenes:_polenes
         });
