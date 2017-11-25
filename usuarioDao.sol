@@ -13,7 +13,7 @@ contract UsuarioDao {
         return numeroUsuarios;
     }
 
-    function setNumeroUsuarios(uint numero) public {
+    function setNumeroUsuarios(uint numero) public onlyLlamador{
         numeroUsuarios = numero;
     }
 
@@ -21,7 +21,16 @@ contract UsuarioDao {
         return indiceUsuarios[index];
     }
 
-    function setIndiceUsuarios(address usuario) public {
+    function setIndiceUsuarios(address usuario) public onlyLlamador {
         indiceUsuarios.push(usuario);
+    }
+
+    function cambiarLlamador(address _llamador) public onlyLlamador {
+        llamador = _llamador;
+    }
+
+    modifier onlyLlamador {
+        require(msg.sender == llamador);
+        _;
     }
 }
