@@ -49,8 +49,8 @@ contract CeldaDao {
         return indiceCeldas[indice];
     }
 
-    function setIndiceCeldas(uint indice, uint256 value) public onlyLlamador {
-        indiceCeldas[indice] = value;
+    function setIndiceCeldas(uint256 value) public onlyLlamador {
+        indiceCeldas.push(value);
     }
 
     function getCeldas(uint256 id) public view returns(
