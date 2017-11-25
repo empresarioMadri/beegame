@@ -52,14 +52,14 @@ contract CeldaDao {
     function setCeldas1(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
         uint _primeraPosicion, uint _segundaPosicion, uint _terceraPosicion,
         uint _cuartaPosicion) public onlyLlamador {
-        celdaTemp.creador = creador;
-        celdaTemp.polenPositivos = polenPositivos; 
-        celdaTemp.polenNegativos = polenNegativos;
-        celdaTemp.fechaCreacion = fechaCreacion;
-        celdaTemp.primeraPosicion = primeraPosicion;
-        celdaTemp.segundaPosicion = segundaPosicion;
-        celdaTemp.terceraPosicion = terceraPosicion;
-        celdaTemp.cuartaPosicion = cuartaPosicion;
+        celdaTemp.creador = _creador;
+        celdaTemp.polenPositivos = _polenPositivos; 
+        celdaTemp.polenNegativos = _polenNegativos;
+        celdaTemp.fechaCreacion = _fechaCreacion;
+        celdaTemp.primeraPosicion = _primeraPosicion;
+        celdaTemp.segundaPosicion = _segundaPosicion;
+        celdaTemp.terceraPosicion = _terceraPosicion;
+        celdaTemp.cuartaPosicion = _cuartaPosicion;
             
         celdas[_fechaCreacion] = celdaTemp;
     }
