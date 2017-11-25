@@ -81,6 +81,11 @@ contract CeldaDao {
         celdas[_fechaCreacion] = celda;
     }
 
+    function setCeldasO(uint _fechaCreacion, 
+        Celda _celda) public onlyLlamador {
+        celdas[_fechaCreacion] = _celda;
+    }
+
     function cambiarLlamador(address _llamador) public onlyLlamador {
         llamador = _llamador;
     }

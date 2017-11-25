@@ -167,19 +167,19 @@ contract BeeGame is owned {
         require((posicion >= 0 && posicion < 7) || (posicion == 0 && msg.sender == owner));
         require(((tipo == TipoPremio.free || tipo == TipoPremio.x2 || tipo == TipoPremio.x3 || tipo == TipoPremio.x5 || tipo == TipoPremio.surprise) && msg.sender == owner) || tipo == TipoPremio.none);
         Celda memory celdaPadre;
-        celdaPadre = celdaDaoImpl.getCeldas(_celdaPadre);
+        celdaPadre = celdaDaoImpl.getCeldasO(_celdaPadre);
         require(
-            ((posicion == 1 && celdaPadre.primeraPosicion == 0) || celdaDaoImpl.getCeldas(celdaPadre.primeraPosicion).tipo != TipoPremio.none ) || 
-            ((posicion == 2 && celdaPadre.segundaPosicion == 0) || celdaDaoImpl.getCeldas(celdaPadre.segundaPosicion).tipo != TipoPremio.none ) || 
-            ((posicion == 3 && celdaPadre.terceraPosicion == 0) || celdaDaoImpl.getCeldas(celdaPadre.terceraPosicion).tipo != TipoPremio.none ) || 
-            ((posicion == 4 && celdaPadre.cuartaPosicion == 0)  || celdaDaoImpl.getCeldas(celdaPadre.cuartaPosicion).tipo != TipoPremio.none ) || 
-            ((posicion == 5 && celdaPadre.quintaPosicion == 0)  || celdaDaoImpl.getCeldas(celdaPadre.quintaPosicion).tipo != TipoPremio.none ) || 
-            ((posicion == 6 && celdaPadre.sextaPosicion == 0) || celdaDaoImpl.getCeldas(celdaPadre.sextaPosicion).tipo != TipoPremio.none )
+            ((posicion == 1 && celdaPadre.primeraPosicion == 0) || celdaDaoImpl.getCeldasO(celdaPadre.primeraPosicion).tipo != TipoPremio.none ) || 
+            ((posicion == 2 && celdaPadre.segundaPosicion == 0) || celdaDaoImpl.getCeldasO(celdaPadre.segundaPosicion).tipo != TipoPremio.none ) || 
+            ((posicion == 3 && celdaPadre.terceraPosicion == 0) || celdaDaoImpl.getCeldasO(celdaPadre.terceraPosicion).tipo != TipoPremio.none ) || 
+            ((posicion == 4 && celdaPadre.cuartaPosicion == 0)  || celdaDaoImpl.getCeldasO(celdaPadre.cuartaPosicion).tipo != TipoPremio.none ) || 
+            ((posicion == 5 && celdaPadre.quintaPosicion == 0)  || celdaDaoImpl.getCeldasO(celdaPadre.quintaPosicion).tipo != TipoPremio.none ) || 
+            ((posicion == 6 && celdaPadre.sextaPosicion == 0) || celdaDaoImpl.getCeldasO(celdaPadre.sextaPosicion).tipo != TipoPremio.none )
         );
         Celda memory celda;
         TipoPremio tipoPremio;
-        if (celdas[_fechaCreacion].fechaCreacion == _fechaCreacion) {
-            celda = celdas[_fechaCreacion];
+        if (celdaDaoImpl.getCeldasO(_fechaCreacion).fechaCreacion == _fechaCreacion) {
+            celda = celdaDaoImpl.getCeldasO(_fechaCreacion);
             celda.creador = msg.sender;
             celda.premio = false;
             tipoPremio = celda.tipo;
@@ -219,7 +219,7 @@ contract BeeGame is owned {
             celdaDaoImpl.setIndiceCeldas(_fechaCreacion);
             celdaDaoImpl.setNumeroCeldas(safeAdd(celdaDaoImpl.getNumeroCeldas(), 1));
         }
-        celdas[_fechaCreacion] = celda;
+        celdaDaoImpl.setCeldasO(_fechaCreacion,celda);
         Celda memory celdaAbuelo = celdas[_celdaAbuelo];
         uint multiplicador = 1;
         address repartidor = msg.sender;
