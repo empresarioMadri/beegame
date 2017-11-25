@@ -31,15 +31,21 @@ contract CeldaDao {
         indiceCeldas.push(value);
     }
 
-    function getCeldas(uint256 id) public view returns(
+    function getCeldas1(uint256 id) public view returns(
         address creador, uint polenPositivos, uint polenNegativos, 
         uint primeraPosicion, uint segundaPosicion, uint terceraPosicion,
-        uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
+        uint cuartaPosicion) {
         
         TiposCompartidos.Celda memory celda = celdas[id];
         return (celda.creador,celda.polenPositivos,celda.polenNegativos,
-        celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion, celda.cuartaPosicion, 
-        celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
+        celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion, celda.cuartaPosicion);
+    }
+
+    function getCeldas2(uint256 id) public view returns(
+        uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
+        
+        TiposCompartidos.Celda memory celda = celdas[id];
+        return (celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
     }
 
     function setCeldas(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
