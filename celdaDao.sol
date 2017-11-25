@@ -21,12 +21,14 @@ contract CeldaDao {
     }
 
     uint internal numeroCeldas;
-    mapping (uint256 => Celda) celdas;
-    uint256[] indiceCeldas;
-    address llamador;
+    mapping (uint256 => Celda) internal celdas;
+    uint256[] internal indiceCeldas;
+    address internal llamador;
+    address internal owner;
 
     function CeldaDao(address _llamador) public {
         llamador = _llamador;
+        owner = msg.sender;
     }
 
     function getNumeroCeldas() public view returns(uint) {
@@ -86,12 +88,17 @@ contract CeldaDao {
         celdas[_fechaCreacion] = _celda;
     }
 
-    function cambiarLlamador(address _llamador) public onlyLlamador {
+    function cambiarLlamador(address _llamador) public onlyOwner {
         llamador = _llamador;
     }
 
     modifier onlyLlamador {
         require(msg.sender == llamador);
+        _;
+    }
+
+    modifier onlyOwner {
+        require(msg.sender == owner);
         _;
     }
 
