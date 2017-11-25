@@ -60,6 +60,10 @@ contract MensajeDao {
         mensajes[_fechaCreacion] = mensaje;
     }
 
+    function setMensajeO(uint256 _fechaCreacion, Mensaje mensaje) public onlyLlamador {
+        mensajes[_fechaCreacion] = mensaje;
+    }
+
     function cambiarLlamador(address _llamador) public onlyLlamador {
         llamador = _llamador;
     }

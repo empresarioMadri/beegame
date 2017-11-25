@@ -40,7 +40,23 @@ contract BeeGame is owned {
         TipoPremio tipo;
         bool premio;
     }
+
+    struct Bote {
+        address premiado;
+        uint256 fechaCreacion;
+        uint polenes;
+    }
+
     enum EstadoMensaje{pendiente,aprobado,rechazado}
+
+    struct Mensaje {
+        address creador;
+        string apodo;
+        uint256 fechaCreacion;
+        string mensaje;
+        EstadoMensaje estado;
+        string motivo;
+    }
 
     address tokenDao;
     TokenDao internal tokenDaoImpl;
@@ -220,7 +236,7 @@ contract BeeGame is owned {
             celdaDaoImpl.setNumeroCeldas(safeAdd(celdaDaoImpl.getNumeroCeldas(), 1));
         }
         celdaDaoImpl.setCeldasO(_fechaCreacion,celda);
-        Celda memory celdaAbuelo = celdas[_celdaAbuelo];
+        Celda memory celdaAbuelo = celdaDaoImpl.getCeldasO(_celdaAbuelo);
         uint multiplicador = 1;
         address repartidor = msg.sender;
         if (tipoPremio == TipoPremio.x2 && !celda.premio) {
@@ -253,47 +269,47 @@ contract BeeGame is owned {
             celdaPadre.polenPositivos = safeAdd(celdaPadre.polenPositivos,safeMul(2,multiplicador));
             celdaAbuelo.polenPositivos = safeAdd(celdaAbuelo.polenPositivos,safeMul(1,multiplicador));
             _transfer(repartidor,celdaAbuelo.creador,safeMul(1,multiplicador));
-            celdas[celdaAbuelo.fechaCreacion] = celdaAbuelo;
+            celdaDaoImpl.setCeldasO(celdaAbuelo.fechaCreacion,celdaAbuelo);
         }else if (!celda.premio) {
             _transfer(repartidor,celdaPadre.creador,safeMul(3,multiplicador));
             celdaPadre.polenPositivos = safeAdd(celdaPadre.polenPositivos,safeMul(3,multiplicador));
         }
-        celdas[celdaPadre.fechaCreacion] = celdaPadre;
+        celdaDaoImpl.setCeldas(celdaPadre.fechaCreacion,celdaPadre);
     }
 
-    function getPremio(uint index) public view returns (address premiado, uint polenes, uint256 fechaCreacion){
-        uint256 indexA = indicePremios[index];
-        Premio memory premio = premios[indexA];
-        return (premio.premiado, premio.polenes, premio.fechaCreacion);
+    function getBote(uint index) public view returns (address premiado, uint polenes, uint256 fechaCreacion){
+        uint256 indexA = boteDaoImpl.getIndiceBotes(index);
+        Bote memory bote = boteDaoImpl.getBotes(indexA);
+        return (bote.premiado, bote.polenes, bote.fechaCreacion);
     }
 
     function getCelda(uint index) public view returns (address creador, uint polenPositivos, uint polenNegativos, uint fechaCreacion, 
                                             uint primeraPosicion, uint segundaPosicion, uint terceraPosicion,
                                             uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TipoPremio tipo, bool premio) {
-        uint256 indexA = indiceCeldas[index];
-        Celda memory  celda = celdas[indexA];
+        uint256 indexA = celdaDaoImpl.getIndiceCeldas(index);
+        Celda memory  celda = celdaDaoImpl.getCeldasO(indexA);
         return (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion,
         celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion, celda.cuartaPosicion, 
         celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
     }
 
     function getMensaje(uint index) public view returns(address creador,uint fechaCreacion,string _mensaje,string apodo, EstadoMensaje estado, string motivo){
-        uint256 indexA = indiceMensajes[index];
-        Mensaje memory mensaje = mensajes[indexA];
+        uint256 indexA = mensajeDaoImpl.getIndiceMensajes(index);
+        Mensaje memory mensaje = mensajeDaoImpl.getMensajes(indexA);
         return (mensaje.creador,mensaje.fechaCreacion,mensaje.mensaje,mensaje.apodo,mensaje.estado,mensaje.motivo);
     }
 
     function insertarMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje) public {
         bool encontrado = false;
-        for (uint i = 0; i < numeroUsuarios && !encontrado; i++) {
-            address usuarioT = indiceUsuarios[i];
+        for (uint i = 0; i < usuarioDaoImpl.getNumeroUsuarios() && !encontrado; i++) {
+            address usuarioT = usuarioDaoImpl.getIndiceUsuarios(i);
             if (usuarioT == msg.sender) {
                 encontrado = true;
             }
         }
         require(encontrado);
-        indiceMensajes.push(_fechaCreacion);
-        numeroMensajes = safeAdd(numeroMensajes,1);
+        mensajeDaoImpl.setIndiceMensajes(_fechaCreacion);
+        mensajeDaoImpl.setNumeroMensajes(safeAdd(mensajeDaoImpl.getNumeroMensajes(),1));
         Mensaje memory mensaje = Mensaje({
             creador:msg.sender,
             apodo:_apodo,
@@ -302,7 +318,7 @@ contract BeeGame is owned {
             estado:EstadoMensaje.aprobado,
             motivo:""
         });
-        mensajes[_fechaCreacion] = mensaje;
+        mensajeDaoImpl.setMensajesO(_fechaCreacion,mensaje);
     }
 
     function aprobarMensaje(uint256 _fechaCreacion,EstadoMensaje _estado,string _motivo) public onlyOwner {
