@@ -256,13 +256,13 @@ contract BeeGame is Owned {
         return celda;
     }
     
-    function getMensaje(uint index) public view returns(address creador,uint fechaCreacion,byte32  _mensaje,byte32  apodo, TiposCompartidos.EstadoMensaje estado, byte32  motivo){
+    function getMensaje(uint index) public view returns(address creador,uint fechaCreacion,bytes32  _mensaje,bytes32  apodo, TiposCompartidos.EstadoMensaje estado, bytes32  motivo){
         uint256 indexA = mensajeDaoImpl.getIndiceMensajes(index);
         TiposCompartidos.Mensaje memory mensaje = getMensajesO(indexA);
         return (mensaje.creador,mensaje.fechaCreacion,mensaje.mensaje,mensaje.apodo,mensaje.estado,mensaje.motivo);
     }
     
-    function insertarMensaje(uint256 _fechaCreacion, byte32  _apodo,byte32  _mensaje) public {
+    function insertarMensaje(uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje) public {
         bool encontrado = false;
         for (uint i = 0; i < usuarioDaoImpl.getNumeroUsuarios() && !encontrado; i++) {
             address usuarioT = usuarioDaoImpl.getIndiceUsuarios(i);
@@ -284,7 +284,7 @@ contract BeeGame is Owned {
         mensajeDaoImpl.setMensajes(_fechaCreacion,mensaje.apodo,mensaje.mensaje,mensaje.estado,mensaje.motivo);
     }
     
-    function aprobarMensaje(uint256 _fechaCreacion,TiposCompartidos.EstadoMensaje _estado,byte32  _motivo) public onlyOwner {
+    function aprobarMensaje(uint256 _fechaCreacion,TiposCompartidos.EstadoMensaje _estado,bytes32  _motivo) public onlyOwner {
         TiposCompartidos.Mensaje memory mensaje = getMensajesO(_fechaCreacion);
         mensaje.estado = _estado;
         mensaje.motivo = _motivo;
