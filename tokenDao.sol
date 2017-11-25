@@ -70,7 +70,7 @@ contract TokenDao {
 	}
 
     function setBalance(address addr,uint value) public {
-		balanceOf[addr] = value;;
+		balanceOf[addr] = value;
 	}
 
     function cambiarLlamador(address _llamador) public onlyLlamador {

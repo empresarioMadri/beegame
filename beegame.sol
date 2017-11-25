@@ -1,5 +1,10 @@
 pragma solidity ^0.4.18;
 
+import 'https://github.com/empresarioMadri/beegame/boteDao.sol';
+import 'https://github.com/empresarioMadri/beegame/celdaDao.sol';
+import 'https://github.com/empresarioMadri/beegame/mensajeDao.sol';
+import 'https://github.com/empresarioMadri/beegame/tokenDao.sol';
+
 contract owned {
     address public owner;
 
@@ -17,67 +22,9 @@ contract owned {
     }
 }
 
-library TiposCompartidos {
-    enum TipoPremio {none,free,x2,x3,x5, surprise }
-
-    enum EstadoMensaje{pendiente,aprobado,rechazado}
-
-    struct Celda {
-        address creador;
-        uint polenPositivos;
-        uint polenNegativos;
-        uint256 fechaCreacion;
-        uint primeraPosicion;
-        uint segundaPosicion;
-        uint terceraPosicion;
-        uint cuartaPosicion;
-        uint quintaPosicion;
-        uint sextaPosicion;
-        TipoPremio tipo;
-        bool premio;
-    }
-
-    struct Mensaje {
-        address creador;
-        string apodo;
-        uint256 fechaCreacion;
-        string mensaje;
-        TiposCompartidos.EstadoMensaje estado;
-        string motivo;
-    }
-
-    struct Premio {
-        address premiado;
-        uint256 fechaCreacion;
-        uint polenes;
-    }
-    
-}
-
 contract BeeGame is owned {
     
-    uint256 internal sellPrice;
-    uint256 internal buyPrice;
-    uint internal numeroCeldas;
-    uint internal numeroMensajes;
-    uint internal numeroPremios;
-    string internal name;
-    string internal symbol;
-    uint8 internal decimals;
-    uint internal numeroUsuarios;
     uint fechaTax;
-
-    mapping (address => uint) balanceOf;
-
-    address[] indiceUsuarios;
-    
-    mapping (uint256 => TiposCompartidos.Celda) celdas;
-    mapping (uint256 => TiposCompartidos.Mensaje) mensajes;
-    mapping (uint256 => TiposCompartidos.Premio) premios;
-    
-    uint256[] indiceCeldas;
-    uint256[] indiceMensajes;
-    uint256[] indicePremios;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
 
