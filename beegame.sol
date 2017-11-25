@@ -322,7 +322,7 @@ contract BeeGame is owned {
     }
 
     function aprobarMensaje(uint256 _fechaCreacion,EstadoMensaje _estado,string _motivo) public onlyOwner {
-        Mensaje memory mensaje = mensajes[_fechaCreacion];
+        Mensaje memory mensaje = mensajeDaoImpl.getMensajesO(_fechaCreacion);
         mensaje.estado = _estado;
         mensaje.motivo = _motivo;
         mensajes[_fechaCreacion] = mensaje;

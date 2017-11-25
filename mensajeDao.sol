@@ -48,6 +48,12 @@ contract MensajeDao {
         return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
+    function getMensajesO(uint256 id) public view returns(
+        Mensaje mensaje) {
+        Mensaje memory mensajeO = mensajes[id];
+        return mensajeO;
+    }
+
     function setMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje,EstadoMensaje _estado, string _motivo) public onlyLlamador {
         Mensaje memory mensaje = Mensaje({
             creador:msg.sender,
