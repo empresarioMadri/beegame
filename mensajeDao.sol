@@ -19,7 +19,7 @@ contract MensajeDao {
 
     function MensajeDao(
         address _llamador
-    ) {
+    ) public {
         llamador = _llamador;
     }
 
@@ -47,8 +47,7 @@ contract MensajeDao {
         return (mensaje.creador,mensaje.apodo,mensaje.fechaCreacion,mensaje.mensaje,mensaje.estado,mensaje.motivo);
     }
 
-    function setMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje,EstadoMensaje _estado, string motivo)
-    {
+    function setMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje,EstadoMensaje _estado, string motivo) public onlyLlamador {
         Mensaje memory mensaje = Mensaje({
             creador:msg.sender,
             apodo:_apodo,
