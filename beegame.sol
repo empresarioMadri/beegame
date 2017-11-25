@@ -263,7 +263,7 @@ contract BeeGame is owned {
 
     function getMensaje(uint index) public view returns(address creador,uint fechaCreacion,string _mensaje,string apodo, TiposCompartidos.EstadoMensaje estado, string motivo){
         uint256 indexA = mensajeDaoImpl.getIndiceMensajes(index);
-        TiposCompartidos.Mensaje memory mensaje = mensajeDaoImpl.getMensajes(indexA);
+        TiposCompartidos.Mensaje memory mensaje = mensajeDaoImpl.getMensajesO(indexA);
         return (mensaje.creador,mensaje.fechaCreacion,mensaje.mensaje,mensaje.apodo,mensaje.estado,mensaje.motivo);
     }
 

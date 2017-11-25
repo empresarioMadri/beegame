@@ -45,7 +45,7 @@ contract MensajeDao {
         return mensajeO;
     }
 
-    function setMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje,TiposCompartidos.EstadoMensaje _estado, string _motivo) public onlyLlamador {
+    function setMensajes(uint256 _fechaCreacion, string _apodo,string _mensaje,TiposCompartidos.EstadoMensaje _estado, string _motivo) public onlyLlamador {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:msg.sender,
             apodo:_apodo,
@@ -57,7 +57,7 @@ contract MensajeDao {
         mensajes[_fechaCreacion] = mensaje;
     }
 
-    function setMensajeO(uint256 _fechaCreacion, TiposCompartidos.Mensaje mensaje) public onlyLlamador {
+    function setMensajesO(uint256 _fechaCreacion, TiposCompartidos.Mensaje mensaje) public onlyLlamador {
         mensajes[_fechaCreacion] = mensaje;
     }
 
