@@ -4,6 +4,7 @@ import 'https://github.com/empresarioMadri/beegame/boteDao.sol';
 import 'https://github.com/empresarioMadri/beegame/celdaDao.sol';
 import 'https://github.com/empresarioMadri/beegame/mensajeDao.sol';
 import 'https://github.com/empresarioMadri/beegame/tokenDao.sol';
+import 'https://github.com/empresarioMadri/beegame/usuarioDao.sol';
 
 contract owned {
     address public owner;
@@ -23,6 +24,21 @@ contract owned {
 }
 
 contract BeeGame is owned {
+
+    enum TipoPremio {none,free,x2,x3,x5, surprise }
+    enum EstadoMensaje{pendiente,aprobado,rechazado}
+
+    address tokenDao;
+    TokenDao internal tokenDaoImpl;
+
+    address celdaDao;
+    CeldaDao internal celdaDaoImpl;
+
+    address mensajeDao;
+    MensajeDao internal mensajeDaoImpl;
+
+    address boteDao;
+    BoteDao internal boteDaoImpl;
     
     uint fechaTax;
 
@@ -35,29 +51,39 @@ contract BeeGame is owned {
         uint256 newSellPrice,
         uint256 newBuyPrice,
         uint _fechaTax) public {
+        boteDao = new BoteDao(this);
+        boteDaoImpl = BoteDao(boteDao);
+
+        celdaDao = new CeldaDao(this);
+        celdaDaoImpl = CeldaDao(celdaDao);
+
+        mensajeDao = new MensajeDao(this);
+        mensajeDaoImpl = MensajeDao(mensajeDao);
+
+        tokenDao = new TokenDao(this);
+        tokenDaoImpl = TokenDao(tokenDao);
+
         fechaTax = _fechaTax;
-        balanceOf[owner] = initialSupply;
+        tokenDaoImpl.setBalanceOf(owner,initialSupply);
         setPrices(newSellPrice,newBuyPrice);
-        numeroCeldas = 0;
-        name = "Beether";
-        symbol = "beeth"; 
-        decimals = 2;
-        TiposCompartidos.Celda memory celda = TiposCompartidos.Celda({
-            creador:msg.sender,
-            polenPositivos : 0, 
-            polenNegativos : 3,
-            fechaCreacion: 1509302402021,
-            primeraPosicion : 0,
-            segundaPosicion : 0,
-            terceraPosicion : 0,
-            cuartaPosicion : 0,
-            quintaPosicion : 0,
-            sextaPosicion : 0,
-            tipo:TiposCompartidos.TipoPremio.none,
-            premio:false
-        });
-        indiceCeldas.push(1509302402021);
-        numeroCeldas = safeAdd(numeroCeldas,1);
+        celdaDaoImpl.setNumeroCeldas(0);
+        tokenDaoImpl.setName("Beether");
+        tokenDaoImpl.setSymbol("beeth"); 
+        tokenDaoImpl.setDecimals(2);
+        celdaDaoImpl.setCeldas(msg.sender,
+            0, 
+            3,
+            1509302402021,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            TipoPremio.none,
+            false);
+        celdaDaoImpl.setIndiceCeldas(1509302402021);
+        celdaDaoImpl.setNumeroCeldas(safeAdd(celdaDaoImpl.getNumeroCeldas(),1));
         numeroUsuarios = safeAdd(numeroUsuarios,1);
         indiceUsuarios.push(msg.sender);
         celdas[1509302402021] = celda;
@@ -108,7 +134,7 @@ contract BeeGame is owned {
         }
         address premiado = indiceUsuarios[ganador];
         _transfer(owner, premiado, bote);
-        TiposCompartidos.Premio memory premio = TiposCompartidos.Premio(premiado,fechaTax,bote);
+        Premio memory premio = Premio(premiado,fechaTax,bote);
         indicePremios.push(fechaTax);
         premios[fechaTax] = premio;
         numeroPremios = safeAdd(numeroPremios, 1);
@@ -116,32 +142,32 @@ contract BeeGame is owned {
         fechaTax = _fechaTax;
     }
 
-    function crearCelda(uint _polenes, uint256 _fechaCreacion, uint posicion, uint _celdaPadre, uint _celdaAbuelo, TiposCompartidos.TipoPremio tipo) public {
+    function crearCelda(uint _polenes, uint256 _fechaCreacion, uint posicion, uint _celdaPadre, uint _celdaAbuelo, TipoPremio tipo) public {
         require(balanceOf[msg.sender]>=3);
         require(_polenes == 3);
         require(_celdaPadre != 0);
         require((posicion >= 0 && posicion < 7) || (posicion == 0 && msg.sender == owner));
-        require(((tipo == TiposCompartidos.TipoPremio.free || tipo == TiposCompartidos.TipoPremio.x2 || tipo == TiposCompartidos.TipoPremio.x3 || tipo == TiposCompartidos.TipoPremio.x5 || tipo == TiposCompartidos.TipoPremio.surprise) && msg.sender == owner) || tipo == TiposCompartidos.TipoPremio.none);
-        TiposCompartidos.Celda memory celdaPadre = celdas[_celdaPadre];
+        require(((tipo == TipoPremio.free || tipo == TipoPremio.x2 || tipo == TipoPremio.x3 || tipo == TipoPremio.x5 || tipo == TipoPremio.surprise) && msg.sender == owner) || tipo == TipoPremio.none);
+        Celda memory celdaPadre = celdas[_celdaPadre];
         require(
-            ((posicion == 1 && celdaPadre.primeraPosicion == 0) || celdas[celdaPadre.primeraPosicion].tipo != TiposCompartidos.TipoPremio.none ) || 
-            ((posicion == 2 && celdaPadre.segundaPosicion == 0) || celdas[celdaPadre.segundaPosicion].tipo != TiposCompartidos.TipoPremio.none ) || 
-            ((posicion == 3 && celdaPadre.terceraPosicion == 0) || celdas[celdaPadre.terceraPosicion].tipo != TiposCompartidos.TipoPremio.none ) || 
-            ((posicion == 4 && celdaPadre.cuartaPosicion == 0)  || celdas[celdaPadre.cuartaPosicion].tipo != TiposCompartidos.TipoPremio.none ) || 
-            ((posicion == 5 && celdaPadre.quintaPosicion == 0)  || celdas[celdaPadre.quintaPosicion].tipo != TiposCompartidos.TipoPremio.none ) || 
-            ((posicion == 6 && celdaPadre.sextaPosicion == 0) || celdas[celdaPadre.sextaPosicion].tipo != TiposCompartidos.TipoPremio.none )
+            ((posicion == 1 && celdaPadre.primeraPosicion == 0) || celdas[celdaPadre.primeraPosicion].tipo != TipoPremio.none ) || 
+            ((posicion == 2 && celdaPadre.segundaPosicion == 0) || celdas[celdaPadre.segundaPosicion].tipo != TipoPremio.none ) || 
+            ((posicion == 3 && celdaPadre.terceraPosicion == 0) || celdas[celdaPadre.terceraPosicion].tipo != TipoPremio.none ) || 
+            ((posicion == 4 && celdaPadre.cuartaPosicion == 0)  || celdas[celdaPadre.cuartaPosicion].tipo != TipoPremio.none ) || 
+            ((posicion == 5 && celdaPadre.quintaPosicion == 0)  || celdas[celdaPadre.quintaPosicion].tipo != TipoPremio.none ) || 
+            ((posicion == 6 && celdaPadre.sextaPosicion == 0) || celdas[celdaPadre.sextaPosicion].tipo != TipoPremio.none )
         );
-        TiposCompartidos.Celda memory celda;
-        TiposCompartidos.TipoPremio tipoPremio;
+        Celda memory celda;
+        TipoPremio tipoPremio;
         if (celdas[_fechaCreacion].fechaCreacion == _fechaCreacion) {
             celda = celdas[_fechaCreacion];
             celda.creador = msg.sender;
             celda.premio = false;
             tipoPremio = celda.tipo;
-            celda.tipo = TiposCompartidos.TipoPremio.none;
+            celda.tipo = TipoPremio.none;
         } else {
             if (msg.sender != owner) {
-                celda = TiposCompartidos.Celda({
+                celda = Celda({
                     creador:msg.sender,
                     polenPositivos : 0, 
                     polenNegativos : _polenes,
@@ -156,7 +182,7 @@ contract BeeGame is owned {
                     premio:false
                 });
             }else {
-                celda = TiposCompartidos.Celda({
+                celda = Celda({
                     creador:msg.sender,
                     polenPositivos : 0, 
                     polenNegativos : _polenes,
@@ -175,19 +201,19 @@ contract BeeGame is owned {
             numeroCeldas = safeAdd(numeroCeldas, 1);
         }
         celdas[_fechaCreacion] = celda;
-        TiposCompartidos.Celda memory celdaAbuelo = celdas[_celdaAbuelo];
+        Celda memory celdaAbuelo = celdas[_celdaAbuelo];
         uint multiplicador = 1;
         address repartidor = msg.sender;
-        if (tipoPremio == TiposCompartidos.TipoPremio.x2 && !celda.premio) {
+        if (tipoPremio == TipoPremio.x2 && !celda.premio) {
             multiplicador = 2;
             repartidor = owner;
-        } else if (tipoPremio == TiposCompartidos.TipoPremio.x3 && !celda.premio) {
+        } else if (tipoPremio == TipoPremio.x3 && !celda.premio) {
             multiplicador = 3;
             repartidor = owner;
-        } else if (tipoPremio == TiposCompartidos.TipoPremio.x5 && !celda.premio) {
+        } else if (tipoPremio == TipoPremio.x5 && !celda.premio) {
             multiplicador = 5;
             repartidor = owner;
-        }  else if (tipoPremio == TiposCompartidos.TipoPremio.free && !celda.premio) {
+        }  else if (tipoPremio == TipoPremio.free && !celda.premio) {
             repartidor = owner;
         }
         if (posicion == 1 && celdaPadre.primeraPosicion == 0) {
@@ -218,23 +244,23 @@ contract BeeGame is owned {
 
     function getPremio(uint index) public view returns (address premiado, uint polenes, uint256 fechaCreacion){
         uint256 indexA = indicePremios[index];
-        TiposCompartidos.Premio memory premio = premios[indexA];
+        Premio memory premio = premios[indexA];
         return (premio.premiado, premio.polenes, premio.fechaCreacion);
     }
 
     function getCelda(uint index) public view returns (address creador, uint polenPositivos, uint polenNegativos, uint fechaCreacion, 
                                             uint primeraPosicion, uint segundaPosicion, uint terceraPosicion,
-                                            uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
+                                            uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TipoPremio tipo, bool premio) {
         uint256 indexA = indiceCeldas[index];
-        TiposCompartidos.Celda memory  celda = celdas[indexA];
+        Celda memory  celda = celdas[indexA];
         return (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion,
         celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion, celda.cuartaPosicion, 
         celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
     }
 
-    function getMensaje(uint index) public view returns(address creador,uint fechaCreacion,string _mensaje,string apodo, TiposCompartidos.EstadoMensaje estado, string motivo){
+    function getMensaje(uint index) public view returns(address creador,uint fechaCreacion,string _mensaje,string apodo, EstadoMensaje estado, string motivo){
         uint256 indexA = indiceMensajes[index];
-        TiposCompartidos.Mensaje memory mensaje = mensajes[indexA];
+        Mensaje memory mensaje = mensajes[indexA];
         return (mensaje.creador,mensaje.fechaCreacion,mensaje.mensaje,mensaje.apodo,mensaje.estado,mensaje.motivo);
     }
 
@@ -249,19 +275,19 @@ contract BeeGame is owned {
         require(encontrado);
         indiceMensajes.push(_fechaCreacion);
         numeroMensajes = safeAdd(numeroMensajes,1);
-        TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
+        Mensaje memory mensaje = Mensaje({
             creador:msg.sender,
             apodo:_apodo,
             fechaCreacion:_fechaCreacion,
             mensaje:_mensaje,
-            estado:TiposCompartidos.EstadoMensaje.aprobado,
+            estado:EstadoMensaje.aprobado,
             motivo:""
         });
         mensajes[_fechaCreacion] = mensaje;
     }
 
-    function aprobarMensaje(uint256 _fechaCreacion,TiposCompartidos.EstadoMensaje _estado,string _motivo) public onlyOwner {
-        TiposCompartidos.Mensaje memory mensaje = mensajes[_fechaCreacion];
+    function aprobarMensaje(uint256 _fechaCreacion,EstadoMensaje _estado,string _motivo) public onlyOwner {
+        Mensaje memory mensaje = mensajes[_fechaCreacion];
         mensaje.estado = _estado;
         mensaje.motivo = _motivo;
         mensajes[_fechaCreacion] = mensaje;
