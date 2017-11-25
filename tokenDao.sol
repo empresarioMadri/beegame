@@ -1,6 +1,8 @@
 pragma solidity ^0.4.18;
 
-contract TokenDao {
+import 'https://github.com/empresarioMadri/beegame/owned.sol';
+
+contract TokenDao is Owned {
 
     address internal llamador;
     uint256 internal sellPrice;
@@ -23,7 +25,7 @@ contract TokenDao {
         decimals = 2;
     }
 
-    function setDecimals(uint8 _decimals) internal {
+    function setDecimals(uint8 _decimals) public onlyOwner {
         decimals = _decimals;
     }
     
@@ -31,7 +33,7 @@ contract TokenDao {
         return decimals;
     }
 
-    function setName(string _name) internal {
+    function setName(string _name) public onlyOwner {
         name = _name;
     }
     
@@ -39,7 +41,7 @@ contract TokenDao {
         return name;
     }
 
-    function setSymbol(string _symbol) internal {
+    function setSymbol(string _symbol) public onlyOwner {
         symbol = _symbol;
     }
     
@@ -51,7 +53,7 @@ contract TokenDao {
         return sellPrice;
     }
 
-    function setSellPrice(uint256 _sellPrice) internal {
+    function setSellPrice(uint256 _sellPrice) public onlyOwner {
         sellPrice = _sellPrice;
     }
 
@@ -59,7 +61,7 @@ contract TokenDao {
         return buyPrice;
     }
 
-    function setBuyPrice(uint256 _buyPrice) internal {
+    function setBuyPrice(uint256 _buyPrice) public onlyOwner {
         sellPrice = _buyPrice;
     }
 
@@ -67,7 +69,7 @@ contract TokenDao {
 		return balanceOf[addr];
 	}
 
-    function setBalance(address addr,uint value) internal {
+    function setBalance(address addr,uint value) public onlyOwner {
 		balanceOf[addr] = value;
 	}
 }

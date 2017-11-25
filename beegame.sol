@@ -8,7 +8,7 @@ import 'https://github.com/empresarioMadri/beegame/tokenDao.sol';
 import 'https://github.com/empresarioMadri/beegame/usuarioDao.sol';
 import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
 
-contract BeeGame is owned {
+contract BeeGame is Owned {
 
     address tokenDao;
     TokenDao tokenDaoImpl;
