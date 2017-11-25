@@ -242,7 +242,7 @@ contract BeeGame is owned {
             _transfer(repartidor,celdaPadre.creador,safeMul(3,multiplicador));
             celdaPadre.polenPositivos = safeAdd(celdaPadre.polenPositivos,safeMul(3,multiplicador));
         }
-        celdaDaoImpl.setCeldas(celdaPadre.fechaCreacion,celdaPadre);
+        celdaDaoImpl.setCeldasO(celdaPadre.fechaCreacion,celdaPadre);
     }
 
     function getBote(uint index) public view returns (address premiado, uint polenes, uint256 fechaCreacion){

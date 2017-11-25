@@ -3,12 +3,6 @@ pragma solidity ^0.4.18;
 
 contract BoteDao {
 
-    struct Bote {
-        address premiado;
-        uint256 fechaCreacion;
-        uint polenes;
-    }
-
     uint internal numeroBotes;
     mapping (uint256 => Bote) botes;
     uint256[] indiceBotes;
@@ -40,6 +34,12 @@ contract BoteDao {
         address creador,uint256 fechaCreacion,uint polenes) {
         Bote memory bote = botes[id];
         return (bote.premiado,bote.fechaCreacion,bote.polenes);
+    }
+
+    function getBotesO(uint256 id) public view returns(
+        TiposCompartidos.Bote) {
+        Bote memory bote = botes[id];
+        return bote;
     }
 
     function setBotes(address creador,uint256 _fechaCreacion,uint _polenes) public onlyLlamador {
