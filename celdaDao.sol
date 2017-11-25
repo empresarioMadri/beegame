@@ -32,12 +32,12 @@ contract CeldaDao {
     }
 
     function getCeldas(uint256 id) public view returns(
-        address creador, uint polenPositivos, uint polenNegativos, uint fechaCreacion, 
+        address creador, uint polenPositivos, uint polenNegativos, 
         uint primeraPosicion, uint segundaPosicion, uint terceraPosicion,
         uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
         
         TiposCompartidos.Celda memory celda = celdas[id];
-        return (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion,
+        return (celda.creador,celda.polenPositivos,celda.polenNegativos,
         celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion, celda.cuartaPosicion, 
         celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
     }
