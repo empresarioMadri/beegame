@@ -37,12 +37,6 @@ contract BoteDao {
         return (bote.premiado,bote.fechaCreacion,bote.polenes);
     }
 
-    function getBotesO(uint256 id) public view returns(
-        TiposCompartidos.Bote) {
-        TiposCompartidos.Bote memory bote = botes[id];
-        return bote;
-    }
-
     function setBotes(address creador,uint256 _fechaCreacion,uint _polenes) public onlyLlamador {
         TiposCompartidos.Bote memory bote = TiposCompartidos.Bote({
             premiado:creador,
