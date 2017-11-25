@@ -297,7 +297,7 @@ contract BeeGame is owned {
     }
 
     function getBalance(address addr) public view returns(uint) {
-		return tokenDaoImpl.getBalanceOf(addr);
+		return tokenDaoImpl.getBalance(addr);
 	}
 
     function getFechaTax() public view returns(uint) {
@@ -329,7 +329,7 @@ contract BeeGame is owned {
     }
 
     function sell(uint amount) public {
-        require(tokenDaoImpl.getBalanceOf(msg.sender) >= amount);         
+        require(tokenDaoImpl.getBalance(msg.sender) >= amount);         
         _transfer(msg.sender, owner, amount);
         uint revenue = safeMul(amount,tokenDaoImpl.getSellPrice());
         if (msg.sender.send (revenue)) {                
@@ -356,10 +356,10 @@ contract BeeGame is owned {
 
     function _transfer(address _from, address _to, uint _value) internal {
         require(_to != 0x0);                               // Prevent transfer to 0x0 address. Use burn() instead
-        require(tokenDaoImpl.getBalanceOf(_from) >= _value);                // Check if the sender has enough
-        require(safeAdd(tokenDaoImpl.getBalanceOf(_to),_value) > tokenDaoImpl.getBalanceOf(_to)); // Check for overflows
-        tokenDaoImpl.setBalanceOf(_from,safeSub(tokenDaoImpl.getBalanceOf(_from),_value));                         
-        tokenDaoImpl.setBalanceOf(_to,safeAdd(tokenDaoImpl.getBalanceOf(_to),_value));                           
+        require(tokenDaoImpl.getBalance(_from) >= _value);                // Check if the sender has enough
+        require(safeAdd(tokenDaoImpl.getBalance(_to),_value) > tokenDaoImpl.getBalance(_to)); // Check for overflows
+        tokenDaoImpl.setBalance(_from,safeSub(tokenDaoImpl.getBalance(_from),_value));                         
+        tokenDaoImpl.setBalance(_to,safeAdd(tokenDaoImpl.getBalance(_to),_value));                           
         Transfer(_from, _to, _value);
     }
 

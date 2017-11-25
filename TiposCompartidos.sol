@@ -9,7 +9,7 @@ library TiposCompartidos {
         address creador;
         uint polenPositivos;
         uint polenNegativos;
-        uint256 fechaCreacion;
+        uint fechaCreacion;
         uint primeraPosicion;
         uint segundaPosicion;
         uint terceraPosicion;
@@ -23,7 +23,7 @@ library TiposCompartidos {
     struct Mensaje {
         address creador;
         string apodo;
-        uint256 fechaCreacion;
+        uint fechaCreacion;
         string mensaje;
         TiposCompartidos.EstadoMensaje estado;
         string motivo;
@@ -31,13 +31,13 @@ library TiposCompartidos {
 
     struct Premio {
         address premiado;
-        uint256 fechaCreacion;
+        uint fechaCreacion;
         uint polenes;
     }
 
     struct Bote {
         address premiado;
-        uint256 fechaCreacion;
+        uint fechaCreacion;
         uint polenes;
     }
     
