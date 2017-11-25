@@ -1,5 +1,7 @@
 pragma solidity ^0.4.18;
 
+import 'https://github.com/empresarioMadri/beegame/owned.sol';
+
 contract TokenDao is Owned {
 
     address internal llamador;
