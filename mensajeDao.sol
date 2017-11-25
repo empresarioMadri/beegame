@@ -43,8 +43,8 @@ contract MensajeDao {
         address creador, string apodo, uint256 fechaCreacion, 
         string mensaje, EstadoMensaje estado, string motivo) {
         
-        Mensaje memory mensaje = mensajes[id];
-        return (mensaje.creador,mensaje.apodo,mensaje.fechaCreacion,mensaje.mensaje,mensaje.estado,mensaje.motivo);
+        Mensaje memory mensajeO = mensajes[id];
+        return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
     function setMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje,EstadoMensaje _estado, string motivo) public onlyLlamador {
