@@ -27,7 +27,7 @@ contract TokenDAO {
         decimals = _decimals;
     }
     
-    function getDecimals()public view returns(uint8){
+    function getDecimals()public view returns(uint8) {
         return decimals;
     }
 
@@ -68,6 +68,6 @@ contract TokenDAO {
 	}
 
     function setBalance(address addr,uint value) internal {
-		balanceOf[addr] = value;;
+		balanceOf[addr] = value;
 	}
 }
