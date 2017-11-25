@@ -26,6 +26,20 @@ contract owned {
 contract BeeGame is owned {
 
     enum TipoPremio {none,free,x2,x3,x5, surprise }
+    struct Celda {
+        address creador;
+        uint polenPositivos;
+        uint polenNegativos;
+        uint256 fechaCreacion;
+        uint primeraPosicion;
+        uint segundaPosicion;
+        uint terceraPosicion;
+        uint cuartaPosicion;
+        uint quintaPosicion;
+        uint sextaPosicion;
+        TipoPremio tipo;
+        bool premio;
+    }
     enum EstadoMensaje{pendiente,aprobado,rechazado}
 
     address tokenDao;
@@ -39,6 +53,9 @@ contract BeeGame is owned {
 
     address boteDao;
     BoteDao internal boteDaoImpl;
+
+    address usuarioDao;
+    UsuarioDao internal usuarioDaoImpl;
     
     uint fechaTax;
 
@@ -63,6 +80,10 @@ contract BeeGame is owned {
         tokenDao = new TokenDao(this);
         tokenDaoImpl = TokenDao(tokenDao);
 
+        usuarioDao = new UsuarioDao(this);
+        usuarioDaoImpl = UsuarioDao(usuarioDao);
+
+
         fechaTax = _fechaTax;
         tokenDaoImpl.setBalanceOf(owner,initialSupply);
         setPrices(newSellPrice,newBuyPrice);
@@ -70,6 +91,10 @@ contract BeeGame is owned {
         tokenDaoImpl.setName("Beether");
         tokenDaoImpl.setSymbol("beeth"); 
         tokenDaoImpl.setDecimals(2);
+        celdaDaoImpl.setIndiceCeldas(1509302402021);
+        celdaDaoImpl.setNumeroCeldas(safeAdd(celdaDaoImpl.getNumeroCeldas(),1));
+        usuarioDaoImpl.setNumeroUsuarios(safeAdd(usuarioDaoImpl.getNumeroUsuarios(),1));
+        usuarioDaoImpl.setIndiceUsuarios(msg.sender);
         celdaDaoImpl.setCeldas(msg.sender,
             0, 
             3,
@@ -82,41 +107,35 @@ contract BeeGame is owned {
             0,
             TipoPremio.none,
             false);
-        celdaDaoImpl.setIndiceCeldas(1509302402021);
-        celdaDaoImpl.setNumeroCeldas(safeAdd(celdaDaoImpl.getNumeroCeldas(),1));
-        numeroUsuarios = safeAdd(numeroUsuarios,1);
-        indiceUsuarios.push(msg.sender);
-        celdas[1509302402021] = celda;
     }
 
-    function buy() public payable returns (uint amount) {
-        amount = msg.value / buyPrice;         
-        require(balanceOf[owner] >= amount); 
+    function buy() public payable {
+        uint amount = msg.value / tokenDaoImpl.getBuyPrice();         
+        require(tokenDaoImpl.getBalanceOf(owner) >= amount); 
         _transfer(owner, msg.sender, amount);
         incluirUsuario(msg.sender);
         Transfer(owner, msg.sender, amount); 
-        return amount;                         
     }
 
     function incluirUsuario(address usuario) public {
         bool encontrado = false;
-        for (uint i = 0; i < numeroUsuarios; i++) {
-            address usuarioT = indiceUsuarios[i];
-            if (usuarioT == usuario){
+        for (uint i = 0; i < usuarioDaoImpl.getNumeroUsuarios(); i++) {
+            address usuarioT = usuarioDaoImpl.getIndiceUsuarios(i);
+            if (usuarioT == usuario) {
                 encontrado = true;
             }
         }
-        if(!encontrado){
-            indiceUsuarios.push(usuario);
-            numeroUsuarios++;
+        if (!encontrado){
+            usuarioDaoImpl.setIndiceUsuarios(usuario);
+            usuarioDaoImpl.setNumeroUsuarios(safeAdd(usuarioDaoImpl.getNumeroUsuarios(),1));
         }
     }
 
     function getBote() public view returns(uint) {
         uint retorno;
-        for (uint i = 0; i < numeroUsuarios; i++) {
-            address usuario = indiceUsuarios[i];
-            if (balanceOf[usuario] > 0) {
+        for (uint i = 0; i < usuarioDaoImpl.getNumeroUsuarios(); i++) {
+            address usuario = usuarioDaoImpl.getIndiceUsuarios(i);
+            if (tokenDaoImpl.getBalanceOf(usuario) > 0) {
                 retorno = safeAdd(retorno,1);
             }
         }
@@ -125,37 +144,37 @@ contract BeeGame is owned {
 
     function cobrarImpuesto(uint _fechaTax,uint ganador) public onlyOwner {
         uint bote = 0;
-        for (uint i = 0; i < numeroUsuarios; i++) {
-            address usuario = indiceUsuarios[i];
-            if (balanceOf[usuario] > 0){
+        for (uint i = 0; i < usuarioDaoImpl.getNumeroUsuarios(); i++) {
+            address usuario = usuarioDaoImpl.getIndiceUsuarios(i);
+            if (tokenDaoImpl.getBalanceOf(usuario) > 0) {
                 _transfer(usuario, owner, 1);
                 bote = safeAdd(bote,1);
             }
         }
-        address premiado = indiceUsuarios[ganador];
+        address premiado = usuarioDaoImpl.getIndiceUsuarios(ganador);
         _transfer(owner, premiado, bote);
-        Premio memory premio = Premio(premiado,fechaTax,bote);
-        indicePremios.push(fechaTax);
-        premios[fechaTax] = premio;
-        numeroPremios = safeAdd(numeroPremios, 1);
+        boteDaoImpl.setBotes(premiado,_fechaTax,bote);
+        boteDaoImpl.setIndiceBotes(_fechaTax);
+        boteDaoImpl.setNumeroPremios(safeAdd(boteDaoImpl.getNumeroPremios(), 1));
 
         fechaTax = _fechaTax;
     }
 
     function crearCelda(uint _polenes, uint256 _fechaCreacion, uint posicion, uint _celdaPadre, uint _celdaAbuelo, TipoPremio tipo) public {
-        require(balanceOf[msg.sender]>=3);
+        require(tokenDaoImpl.getBalanceOf(msg.sender)>=3);
         require(_polenes == 3);
         require(_celdaPadre != 0);
         require((posicion >= 0 && posicion < 7) || (posicion == 0 && msg.sender == owner));
         require(((tipo == TipoPremio.free || tipo == TipoPremio.x2 || tipo == TipoPremio.x3 || tipo == TipoPremio.x5 || tipo == TipoPremio.surprise) && msg.sender == owner) || tipo == TipoPremio.none);
-        Celda memory celdaPadre = celdas[_celdaPadre];
+        Celda memory celdaPadre;
+        celdaPadre = celdaDaoImpl.getCeldas(_celdaPadre);
         require(
-            ((posicion == 1 && celdaPadre.primeraPosicion == 0) || celdas[celdaPadre.primeraPosicion].tipo != TipoPremio.none ) || 
-            ((posicion == 2 && celdaPadre.segundaPosicion == 0) || celdas[celdaPadre.segundaPosicion].tipo != TipoPremio.none ) || 
-            ((posicion == 3 && celdaPadre.terceraPosicion == 0) || celdas[celdaPadre.terceraPosicion].tipo != TipoPremio.none ) || 
-            ((posicion == 4 && celdaPadre.cuartaPosicion == 0)  || celdas[celdaPadre.cuartaPosicion].tipo != TipoPremio.none ) || 
-            ((posicion == 5 && celdaPadre.quintaPosicion == 0)  || celdas[celdaPadre.quintaPosicion].tipo != TipoPremio.none ) || 
-            ((posicion == 6 && celdaPadre.sextaPosicion == 0) || celdas[celdaPadre.sextaPosicion].tipo != TipoPremio.none )
+            ((posicion == 1 && celdaPadre.primeraPosicion == 0) || celdaDaoImpl.getCeldas(celdaPadre.primeraPosicion).tipo != TipoPremio.none ) || 
+            ((posicion == 2 && celdaPadre.segundaPosicion == 0) || celdaDaoImpl.getCeldas(celdaPadre.segundaPosicion).tipo != TipoPremio.none ) || 
+            ((posicion == 3 && celdaPadre.terceraPosicion == 0) || celdaDaoImpl.getCeldas(celdaPadre.terceraPosicion).tipo != TipoPremio.none ) || 
+            ((posicion == 4 && celdaPadre.cuartaPosicion == 0)  || celdaDaoImpl.getCeldas(celdaPadre.cuartaPosicion).tipo != TipoPremio.none ) || 
+            ((posicion == 5 && celdaPadre.quintaPosicion == 0)  || celdaDaoImpl.getCeldas(celdaPadre.quintaPosicion).tipo != TipoPremio.none ) || 
+            ((posicion == 6 && celdaPadre.sextaPosicion == 0) || celdaDaoImpl.getCeldas(celdaPadre.sextaPosicion).tipo != TipoPremio.none )
         );
         Celda memory celda;
         TipoPremio tipoPremio;
@@ -197,8 +216,8 @@ contract BeeGame is owned {
                     premio:true
                 });
             }
-            indiceCeldas.push(_fechaCreacion);
-            numeroCeldas = safeAdd(numeroCeldas, 1);
+            celdaDaoImpl.setIndiceCeldas(_fechaCreacion);
+            celdaDaoImpl.setNumeroCeldas(safeAdd(celdaDaoImpl.getNumeroCeldas(), 1));
         }
         celdas[_fechaCreacion] = celda;
         Celda memory celdaAbuelo = celdas[_celdaAbuelo];
