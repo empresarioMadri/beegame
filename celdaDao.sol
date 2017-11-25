@@ -62,11 +62,6 @@ contract CeldaDao {
         celdas[_fechaCreacion] = celda;
     }
 
-    function setCeldasO(uint _fechaCreacion, 
-        TiposCompartidos.Celda _celda) public onlyLlamador {
-        celdas[_fechaCreacion] = _celda;
-    }
-
     function cambiarLlamador(address _llamador) public onlyOwner {
         llamador = _llamador;
     }

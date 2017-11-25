@@ -211,7 +211,7 @@ contract BeeGame is owned {
             celdaDaoImpl.setIndiceCeldas(_fechaCreacion);
             celdaDaoImpl.setNumeroCeldas(safeAdd(celdaDaoImpl.getNumeroCeldas(), 1));
         }
-        celdaDaoImpl.setCeldasO(_fechaCreacion,celda);
+        setCeldasO(celda);
         TiposCompartidos.Celda memory celdaAbuelo = getCeldaO(_celdaAbuelo);
         uint multiplicador = 1;
         address repartidor = msg.sender;
@@ -245,12 +245,19 @@ contract BeeGame is owned {
             celdaPadre.polenPositivos = safeAdd(celdaPadre.polenPositivos,safeMul(2,multiplicador));
             celdaAbuelo.polenPositivos = safeAdd(celdaAbuelo.polenPositivos,safeMul(1,multiplicador));
             _transfer(repartidor,celdaAbuelo.creador,safeMul(1,multiplicador));
-            celdaDaoImpl.setCeldasO(celdaAbuelo.fechaCreacion,celdaAbuelo);
+            setCeldasO(celdaAbuelo);
         }else if (!celda.premio) {
             _transfer(repartidor,celdaPadre.creador,safeMul(3,multiplicador));
             celdaPadre.polenPositivos = safeAdd(celdaPadre.polenPositivos,safeMul(3,multiplicador));
         }
-        celdaDaoImpl.setCeldasO(celdaPadre.fechaCreacion,celdaPadre);
+        setCeldasO(celdaPadre);
+    }
+
+    function setCeldasO(TiposCompartidos.Celda celda) internal {
+        celdaDaoImpl.setCeldas(celda.creador,celda.polenPositivos,celda.polenNegativos
+            ,celda.fechaCreacion,celda.primeraPosicion,celda.segundaPosicion,celda.terceraPosicion,celda.cuartaPosicion
+            ,celda.quintaPosicion,celda.sextaPosicion,celda.tipo,celda.premio
+
     }
 
     function getBote(uint index) public view returns (address premiado, uint polenes, uint256 fechaCreacion){
@@ -301,14 +308,14 @@ contract BeeGame is owned {
             estado:TiposCompartidos.EstadoMensaje.aprobado,
             motivo:""
         });
-        mensajeDaoImpl.setMensajesO(_fechaCreacion,mensaje);
+        mensajeDaoImpl.setMensajes(_fechaCreacion,mensaje.apodo,mensaje.mensaje,mensaje.estado,mensaje.motivo);
     }
 
     function aprobarMensaje(uint256 _fechaCreacion,TiposCompartidos.EstadoMensaje _estado,bytes32  _motivo) public onlyOwner {
         TiposCompartidos.Mensaje memory mensaje = getMensajesO(_fechaCreacion);
         mensaje.estado = _estado;
         mensaje.motivo = _motivo;
-        mensajeDaoImpl.setMensajesO(_fechaCreacion, mensaje);
+        mensajeDaoImpl.setMensajes(_fechaCreacion,mensaje.apodo,mensaje.mensaje,mensaje.estado,mensaje.motivo);
     }
 
     function getBalance(address addr) public view returns(uint) {
