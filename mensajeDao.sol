@@ -33,7 +33,7 @@ contract MensajeDao {
 
     function getMensajes(uint256 id) public view returns(
         address creador, string apodo, uint256 fechaCreacion, 
-        string mensaje, EstadoMensaje estado, string motivo) {
+        string mensaje, TiposCompartidos.EstadoMensaje estado, string motivo) {
         
         TiposCompartidos.Mensaje memory mensajeO = mensajes[id];
         return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
@@ -45,7 +45,7 @@ contract MensajeDao {
         return mensajeO;
     }
 
-    function setMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje,EstadoMensaje _estado, string _motivo) public onlyLlamador {
+    function setMensaje(uint256 _fechaCreacion, string _apodo,string _mensaje,TiposCompartidos.EstadoMensaje _estado, string _motivo) public onlyLlamador {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:msg.sender,
             apodo:_apodo,
