@@ -39,12 +39,6 @@ contract MensajeDao {
         return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
-    function getMensajesO(uint256 id) public view returns(
-        TiposCompartidos.Mensaje mensaje) {
-        TiposCompartidos.Mensaje memory mensajeO = mensajes[id];
-        return mensajeO;
-    }
-
     function setMensajes(uint256 _fechaCreacion, string _apodo,string _mensaje,TiposCompartidos.EstadoMensaje _estado, string _motivo) public onlyLlamador {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:msg.sender,
