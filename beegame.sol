@@ -95,7 +95,7 @@ contract BeeGame is owned {
 
     function buy() public payable {
         uint amount = msg.value / tokenDaoImpl.getBuyPrice();         
-        require(tokenDaoImpl.getBalanceOf(owner) >= amount); 
+        require(tokenDaoImpl.getBalance(owner) >= amount); 
         _transfer(owner, msg.sender, amount);
         incluirUsuario(msg.sender);
         Transfer(owner, msg.sender, amount); 
@@ -119,7 +119,7 @@ contract BeeGame is owned {
         uint retorno;
         for (uint i = 0; i < usuarioDaoImpl.getNumeroUsuarios(); i++) {
             address usuario = usuarioDaoImpl.getIndiceUsuarios(i);
-            if (tokenDaoImpl.getBalanceOf(usuario) > 0) {
+            if (tokenDaoImpl.getBalance(usuario) > 0) {
                 retorno = safeAdd(retorno,1);
             }
         }
@@ -130,7 +130,7 @@ contract BeeGame is owned {
         uint bote = 0;
         for (uint i = 0; i < usuarioDaoImpl.getNumeroUsuarios(); i++) {
             address usuario = usuarioDaoImpl.getIndiceUsuarios(i);
-            if (tokenDaoImpl.getBalanceOf(usuario) > 0) {
+            if (tokenDaoImpl.getBalance(usuario) > 0) {
                 _transfer(usuario, owner, 1);
                 bote = safeAdd(bote,1);
             }
@@ -139,13 +139,13 @@ contract BeeGame is owned {
         _transfer(owner, premiado, bote);
         boteDaoImpl.setBotes(premiado,_fechaTax,bote);
         boteDaoImpl.setIndiceBotes(_fechaTax);
-        boteDaoImpl.setNumeroPremios(safeAdd(boteDaoImpl.getNumeroPremios(), 1));
+        boteDaoImpl.setNumeroBotes(safeAdd(boteDaoImpl.getNumeroBotes(), 1));
 
         fechaTax = _fechaTax;
     }
 
     function crearCelda(uint _polenes, uint256 _fechaCreacion, uint posicion, uint _celdaPadre, uint _celdaAbuelo, TiposCompartidos.TipoPremio tipo) public {
-        require(tokenDaoImpl.getBalanceOf(msg.sender)>=3);
+        require(tokenDaoImpl.getBalance(msg.sender)>=3);
         require(_polenes == 3);
         require(_celdaPadre != 0);
         require((posicion >= 0 && posicion < 7) || (posicion == 0 && msg.sender == owner));

@@ -4,25 +4,8 @@ import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
 
 contract CeldaDao {
 
-    enum TipoPremio {none,free,x2,x3,x5, surprise }
-
-    struct Celda {
-        address creador;
-        uint polenPositivos;
-        uint polenNegativos;
-        uint256 fechaCreacion;
-        uint primeraPosicion;
-        uint segundaPosicion;
-        uint terceraPosicion;
-        uint cuartaPosicion;
-        uint quintaPosicion;
-        uint sextaPosicion;
-        TiposCompartidos.TipoPremio tipo;
-        bool premio;
-    }
-
     uint internal numeroCeldas;
-    mapping (uint256 => Celda) internal celdas;
+    mapping (uint256 => TiposCompartidos.Celda) internal celdas;
     uint256[] internal indiceCeldas;
     address internal llamador;
     address internal owner;
@@ -53,21 +36,21 @@ contract CeldaDao {
         uint primeraPosicion, uint segundaPosicion, uint terceraPosicion,
         uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
         
-        Celda memory celda = celdas[id];
+        TiposCompartidos.Celda memory celda = celdas[id];
         return (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion,
         celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion, celda.cuartaPosicion, 
         celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
     }
 
-    function getCeldasO(uint256 id) public view returns(Celda) {
-        Celda memory celda = celdas[id];
+    function getCeldasO(uint256 id) public view returns(TiposCompartidos.Celda) {
+        TiposCompartidos.Celda memory celda = celdas[id];
         return celda;
     }
 
     function setCeldas(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
         uint _primeraPosicion, uint _segundaPosicion, uint _terceraPosicion,
         uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TiposCompartidos.TipoPremio _tipo, bool _premio) public onlyLlamador {
-        Celda memory celda = Celda({
+        TiposCompartidos.Celda memory celda = TiposCompartidos.Celda({
             creador:msg.sender,
             polenPositivos : _polenPositivos, 
             polenNegativos : _polenNegativos,
@@ -85,7 +68,7 @@ contract CeldaDao {
     }
 
     function setCeldasO(uint _fechaCreacion, 
-        Celda _celda) public onlyLlamador {
+        TiposCompartidos.Celda _celda) public onlyLlamador {
         celdas[_fechaCreacion] = _celda;
     }
 
