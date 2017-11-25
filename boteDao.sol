@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
 
-contract CeldaDao {
+contract BoteDao {
 
     struct Bote {
         address premiado;
@@ -16,7 +16,7 @@ contract CeldaDao {
 
     function BoteDao(
         address _llamador
-    ) {
+    ) public {
         llamador = _llamador;
     }
 
