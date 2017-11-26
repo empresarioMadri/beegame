@@ -4,27 +4,27 @@ import 'https://github.com/empresarioMadri/beegame/owned.sol';
 import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
 import 'https://github.com/empresarioMadri/beegame/boteDao.sol';
 import 'https://github.com/empresarioMadri/beegame/mensajeDao.sol';
-import 'https://github.com/empresarioMadri/beegame/CeldaDao.sol';
-import 'https://github.com/empresarioMadri/beegame/TokenDao.sol';
+import 'https://github.com/empresarioMadri/beegame/celdaDao.sol';
+import 'https://github.com/empresarioMadri/beegame/tokenDao.sol';
 import 'https://github.com/empresarioMadri/beegame/usuarioDao.sol';
 import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
 
 contract BeeGame is Owned {
 
-    address internal tokenDao;
-    TokenDao internal tokenDaoImpl;
+    address internal tokenDao = 0x65F9531E27d59DBA02F53E0d84Ae5D970C53bAC5;
+    TokenDao internal tokenDaoImpl = TokenDao(tokenDao);
 
-    address internal celdaDao; 
-    CeldaDao internal celdaDaoImpl;
+    address internal celdaDao = 0x40Db99b64abD4adD0Dd8b08b31f98b08Fbe30e40; 
+    CeldaDao internal celdaDaoImpl = CeldaDao(celdaDao);
 
-    address internal mensajeDao;
-    MensajeDao internal mensajeDaoImpl;
+    address internal mensajeDao = 0x2A549682380258be06037f9bc3e9C8483E153D64;
+    MensajeDao internal mensajeDaoImpl = MensajeDao(mensajeDao);
 
-    address internal boteDao;
-    BoteDao internal boteDaoImpl;
+    address internal boteDao = 0x2F4c37A94083738023970e2dA0866ECd57bc86D0;
+    BoteDao internal boteDaoImpl = BoteDao(boteDao);
 
-    address internal usuarioDao;
-    UsuarioDao internal usuarioDaoImpl;
+    address internal usuarioDao = 0xfC80a298e8F7ED72f257789A1d0701698c8E027F;
+    UsuarioDao internal usuarioDaoImpl = UsuarioDao(usuarioDao);
     
     uint internal fechaTax;
 
@@ -33,42 +33,32 @@ contract BeeGame is Owned {
     event TransferKO(address indexed from, address indexed to, uint256 value);
     
     function BeeGame (uint _fechaTax) public {
-        
-        
-            
-        boteDaoImpl = BoteDao(boteDao);
-
-        celdaDaoImpl = CeldaDao(celdaDao);
-
-        mensajeDaoImpl = MensajeDao(mensajeDao);
-
-        tokenDaoImpl = TokenDao(tokenDao);
-
-        usuarioDaoImpl = UsuarioDao(usuarioDao);
-
         fechaTax = _fechaTax; 
-        
-        
     }
     
     function setBoteDao(address _boteDao)public onlyOwner {
         boteDao = _boteDao;
+        boteDaoImpl = BoteDao(boteDao);
     }
 
     function setUsuarioDao(address _usuarioDao)public onlyOwner {
         usuarioDao = _usuarioDao;
+        usuarioDaoImpl = UsuarioDao(usuarioDao);
     }
 
     function setCeldaDao(address _celdaDao)public onlyOwner {
         celdaDao = _celdaDao;
+        celdaDaoImpl = CeldaDao(celdaDao);
     }
 
     function setMensajeDao(address _mensajeDao)public onlyOwner {
         mensajeDao = _mensajeDao;
+        mensajeDaoImpl = MensajeDao(mensajeDao);
     }
 
     function setTokenDao(address _tokenDao)public onlyOwner {
         tokenDao = _tokenDao;
+        tokenDaoImpl = TokenDao(tokenDao);
     }
     
     function buy() public payable {
