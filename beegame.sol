@@ -1,13 +1,13 @@
 pragma solidity ^0.4.18;
 
-import 'https://github.com/empresarioMadri/beegame/owned.sol';
-import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
-import 'https://github.com/empresarioMadri/beegame/boteDao.sol';
-import 'https://github.com/empresarioMadri/beegame/mensajeDao.sol';
-import 'https://github.com/empresarioMadri/beegame/celdaDao.sol';
-import 'https://github.com/empresarioMadri/beegame/tokenDao.sol';
-import 'https://github.com/empresarioMadri/beegame/usuarioDao.sol';
-import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
+import './owned.sol';
+import './TiposCompartidos.sol';
+import './boteDao.sol';
+import './mensajeDao.sol';
+import './celdaDao.sol';
+import './tokenDao.sol';
+import './usuarioDao.sol';
+import './TiposCompartidos.sol';
 
 contract BeeGame is Owned {
 
@@ -215,13 +215,18 @@ contract BeeGame is Owned {
     }
     
     
-    function getCelda(uint index) public view returns (address creador, uint polenPositivos, uint polenNegativos, 
-                                            uint primeraPosicion, uint segundaPosicion, uint terceraPosicion,
-                                            uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
+    function getCelda1(uint index) public view returns (address creador, uint polenPositivos, uint polenNegativos, uint256 fechaCreacion,
+                                            uint primeraPosicion, uint segundaPosicion, uint terceraPosicion) {
         uint256 indexA = celdaDaoImpl.getIndiceCeldas(index);                                               
         TiposCompartidos.Celda memory  celda = getCeldaO(indexA);
-        return (celda.creador,celda.polenPositivos,celda.polenNegativos,
-        celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion, celda.cuartaPosicion, 
+        return (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion,
+        celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion);
+    }
+
+    function getCelda2(uint index) public view returns (uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
+        uint256 indexA = celdaDaoImpl.getIndiceCeldas(index);                                               
+        TiposCompartidos.Celda memory  celda = getCeldaO(indexA);
+        return (celda.cuartaPosicion, 
         celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
     }
     
@@ -233,6 +238,14 @@ contract BeeGame is Owned {
         (celda.quintaPosicion,celda.sextaPosicion,celda.tipo,celda.premio) = celdaDaoImpl.getCeldas2(id);
         celda.fechaCreacion = id;
         return celda;
+    }
+
+    function bytes32ToStr(bytes32 _bytes32) public pure returns (string){
+        bytes memory bytesArray = new bytes(32);
+        for (uint256 i; i < 32; i++) {
+            bytesArray[i] = _bytes32[i];
+        }
+        return string(bytesArray);
     }
 
     function getMensaje(uint index) public view returns(address creador,uint fechaCreacion,string  _mensaje,string  apodo, TiposCompartidos.EstadoMensaje estado, string  motivo){

@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-import 'https://github.com/empresarioMadri/beegame/owned.sol';
+import './owned.sol';
 
 contract UsuarioDao is Owned {
 
