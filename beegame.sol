@@ -17,7 +17,7 @@ contract BeeGame is Owned {
     address internal celdaDao = 0x1aA5B9d3c1E0d6898Bf6858A64bB8c450073d523; 
     CeldaDao internal celdaDaoImpl = CeldaDao(celdaDao);
 
-    address internal mensajeDao = 0x9f10797df33aeFbFED8Cd1A7a5a257Fb66AE00D9;
+    address internal mensajeDao = 0x534ac33F0fb902572206EB0455aE00Ffc39824B4;
     MensajeDao internal mensajeDaoImpl = MensajeDao(mensajeDao);
 
     address internal boteDao = 0x0a49219fa06290F63524cdB35E08d9a80eE6fF70;
@@ -292,14 +292,14 @@ contract BeeGame is Owned {
             estado:TiposCompartidos.EstadoMensaje.aprobado,
             motivo:""
         });
-        mensajeDaoImpl.setMensajes(_fechaCreacion,mensaje.apodo,mensaje.mensaje,mensaje.estado,mensaje.motivo);
+        mensajeDaoImpl.setMensajes(msg.sender,_fechaCreacion,mensaje.apodo,mensaje.mensaje,mensaje.estado,mensaje.motivo);
     }
     
     function aprobarMensaje(uint256 _fechaCreacion,TiposCompartidos.EstadoMensaje _estado,bytes32  _motivo) public onlyOwner {
         TiposCompartidos.Mensaje memory mensaje = getMensajesO(_fechaCreacion);
         mensaje.estado = _estado;
         mensaje.motivo = _motivo;
-        mensajeDaoImpl.setMensajes(_fechaCreacion,mensaje.apodo,mensaje.mensaje,mensaje.estado,mensaje.motivo);
+        mensajeDaoImpl.setMensajes(msg.sender,_fechaCreacion,mensaje.apodo,mensaje.mensaje,mensaje.estado,mensaje.motivo);
     }
     
     function getMensajesO(uint256 index) internal view returns (TiposCompartidos.Mensaje) {

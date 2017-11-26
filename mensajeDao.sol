@@ -50,9 +50,9 @@ contract MensajeDao is Called {
         return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
-    function setMensajes(uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje,TiposCompartidos.EstadoMensaje _estado, bytes32  _motivo) public onlyCaller {
+    function setMensajes(address creador, uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje,TiposCompartidos.EstadoMensaje _estado, bytes32  _motivo) public onlyCaller {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
-            creador:msg.sender,
+            creador:creador,
             apodo:_apodo,
             fechaCreacion:_fechaCreacion,
             mensaje:_mensaje,
