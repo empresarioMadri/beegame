@@ -234,11 +234,19 @@ contract BeeGame is Owned {
         celda.fechaCreacion = id;
         return celda;
     }
+
+    function bytes32ToStr(bytes32 _bytes32) public pure returns (string){
+        bytes memory bytesArray = new bytes(32);
+        for (uint256 i; i < 32; i++) {
+            bytesArray[i] = _bytes32[i];
+        }
+        return string(bytesArray);
+    }
     
-    function getMensaje(uint index) public view returns(address creador,uint fechaCreacion,bytes32  _mensaje,bytes32  apodo, TiposCompartidos.EstadoMensaje estado, bytes32  motivo){
+    function getMensaje(uint index) public view returns(address creador,uint fechaCreacion,string  _mensaje,string  apodo, TiposCompartidos.EstadoMensaje estado, string  motivo){
         uint256 indexA = mensajeDaoImpl.getIndiceMensajes(index);
         TiposCompartidos.Mensaje memory mensaje = getMensajesO(indexA);
-        return (mensaje.creador,mensaje.fechaCreacion,mensaje.mensaje,mensaje.apodo,mensaje.estado,mensaje.motivo);
+        return (mensaje.creador,mensaje.fechaCreacion,bytes32ToStr(mensaje.mensaje),bytes32ToStr(mensaje.apodo),mensaje.estado,bytes32ToStr(mensaje.motivo));
     }
     
     function insertarMensaje(uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje) public {

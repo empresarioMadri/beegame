@@ -16,25 +16,14 @@ contract MensajeDao is Owned {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje(
             {
                 creador:msg.sender,
-                apodo:stringToBytes32("Admin"),
+                apodo:TiposCompartidos.stringToBytes32("Admin"),
                 fechaCreacion:ahora,
-                mensaje:stringToBytes32("Welcome to beegame"),
+                mensaje:TiposCompartidos.stringToBytes32("Welcome to beegame"),
                 estado:TiposCompartidos.EstadoMensaje.aprobado,
-                motivo:stringToBytes32("")
+                motivo:TiposCompartidos.stringToBytes32("")
             }
         );
         mensajes[ahora] = mensaje;
-    }
-
-    function stringToBytes32(string memory source) internal pure returns (bytes32 result) {
-        bytes memory tempEmptyStringTest = bytes(source);
-        if (tempEmptyStringTest.length == 0) {
-            return 0x0;
-        }
-
-        assembly {
-            result := mload(add(source, 32))
-        }
     }
 
     function getNumeroMensajes() public view returns(uint) {
@@ -53,11 +42,11 @@ contract MensajeDao is Owned {
         indiceMensajes.push(value);
     }
 
-    function getMensajes(uint id) public view returns(
+    function getMensajes(uint256 id) public view returns(
         address creador, bytes32  apodo, uint256 fechaCreacion, 
         bytes32  mensaje, TiposCompartidos.EstadoMensaje estado, bytes32  motivo) {
-        uint256 indexA = indiceMensajes[id];
-        TiposCompartidos.Mensaje memory mensajeO = mensajes[indexA];
+        
+        TiposCompartidos.Mensaje memory mensajeO = mensajes[id];
         return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
