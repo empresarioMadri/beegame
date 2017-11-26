@@ -10,7 +10,31 @@ contract MensajeDao is Owned {
     uint256[] indiceMensajes;
 
     function MensajeDao() public {
-        
+        numeroMensajes = 1;
+        uint256 ahora = now * 1000;
+        indiceMensajes.push(ahora);
+        TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje(
+            {
+                creador:msg.sender,
+                apodo:stringToBytes32("Admin"),
+                fechaCreacion:ahora,
+                mensaje:stringToBytes32("Welcome to beegame"),
+                estado:TiposCompartidos.EstadoMensaje.aprobado,
+                motivo:stringToBytes32("")
+            }
+        );
+        mensajes[ahora] = mensaje;
+    }
+
+    function stringToBytes32(string memory source) internal pure returns (bytes32 result) {
+        bytes memory tempEmptyStringTest = bytes(source);
+        if (tempEmptyStringTest.length == 0) {
+            return 0x0;
+        }
+
+        assembly {
+            result := mload(add(source, 32))
+        }
     }
 
     function getNumeroMensajes() public view returns(uint) {
