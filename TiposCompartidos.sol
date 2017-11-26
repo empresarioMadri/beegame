@@ -22,11 +22,11 @@ library TiposCompartidos {
 
     struct Mensaje {
         address creador;
-        bytes32 apodo;
+        string apodo;
         uint fechaCreacion;
-        bytes32 mensaje;
+        string mensaje;
         TiposCompartidos.EstadoMensaje estado;
-        bytes32 motivo;
+        string motivo;
     }
 
     struct Premio {
@@ -67,6 +67,14 @@ library TiposCompartidos {
         assembly {
             result := mload(add(source, 32))
         }
+    }
+
+    function bytes32ToStr(bytes32 _bytes32) public pure returns (string){
+        bytes memory bytesArray = new bytes(32);
+        for (uint256 i; i < 32; i++) {
+            bytesArray[i] = _bytes32[i];
+        }
+        return string(bytesArray);
     }
     
 }
