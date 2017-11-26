@@ -22,11 +22,11 @@ library TiposCompartidos {
 
     struct Mensaje {
         address creador;
-        string apodo;
+        bytes32 apodo;
         uint fechaCreacion;
-        string mensaje;
+        bytes32 mensaje;
         TiposCompartidos.EstadoMensaje estado;
-        string motivo;
+        bytes32 motivo;
     }
 
     struct Premio {

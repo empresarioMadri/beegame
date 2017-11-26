@@ -16,11 +16,11 @@ contract MensajeDao is Owned {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje(
             {
                 creador:msg.sender,
-                apodo:TiposCompartidos.stringToBytes32("Admin"),
+                apodo:"Admin",
                 fechaCreacion:ahora,
-                mensaje:TiposCompartidos.stringToBytes32("Welcome to beegame"),
+                mensaje:"Welcome to beegame",
                 estado:TiposCompartidos.EstadoMensaje.aprobado,
-                motivo:TiposCompartidos.stringToBytes32("")
+                motivo:""
             }
         );
         mensajes[ahora] = mensaje;
@@ -47,17 +47,17 @@ contract MensajeDao is Owned {
         bytes32  mensaje, TiposCompartidos.EstadoMensaje estado, bytes32  motivo) {
         
         TiposCompartidos.Mensaje memory mensajeO = mensajes[id];
-        return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
+        return (mensajeO.creador,TiposCompartidos.stringToBytes32(mensajeO.apodo),mensajeO.fechaCreacion,TiposCompartidos.stringToBytes32(mensajeO.mensaje),mensajeO.estado,TiposCompartidos.stringToBytes32(mensajeO.motivo));
     }
 
     function setMensajes(uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje,TiposCompartidos.EstadoMensaje _estado, bytes32  _motivo) public onlyOwner {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:msg.sender,
-            apodo:_apodo,
+            apodo:TiposCompartidos.bytes32ToStr(_apodo),
             fechaCreacion:_fechaCreacion,
-            mensaje:_mensaje,
+            mensaje:TiposCompartidos.bytes32ToStr(_mensaje),
             estado:_estado,
-            motivo:_motivo
+            motivo:TiposCompartidos.bytes32ToStr(_motivo)
         });
         mensajes[_fechaCreacion] = mensaje;
     }
