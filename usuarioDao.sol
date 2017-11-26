@@ -1,20 +1,22 @@
 pragma solidity ^0.4.18;
 
-import './owned.sol';
+import "./called.sol";
 
-contract UsuarioDao is Owned {
+contract UsuarioDao is Called { 
 
     uint internal numeroUsuarios;
     address[] indiceUsuarios;
 
     function UsuarioDao() public {
+        indiceUsuarios.push(msg.sender);
+        numeroUsuarios = 1;
     }
 
     function getNumeroUsuarios() public view returns(uint) {
         return numeroUsuarios;
     }
 
-    function setNumeroUsuarios(uint numero) public onlyOwner {
+    function setNumeroUsuarios(uint numero) public onlyCaller {
         numeroUsuarios = numero;
     }
 
@@ -22,7 +24,7 @@ contract UsuarioDao is Owned {
         return indiceUsuarios[index];
     }
 
-    function setIndiceUsuarios(address usuario) public onlyOwner {
+    function setIndiceUsuarios(address usuario) public onlyCaller {
         indiceUsuarios.push(usuario);
     }
 

@@ -1,8 +1,8 @@
 pragma solidity ^0.4.18;
 
-import './owned.sol';
+import "./called.sol";
 
-contract TokenDao is Owned {
+contract TokenDao is Called {
 
     address internal llamador;
     uint256 internal sellPrice;
@@ -12,20 +12,17 @@ contract TokenDao is Owned {
     uint8 internal decimals;
     mapping (address => uint) balanceOf;
 
-    function TokenDao(
-        uint256 initialSupply,
-        uint256 newSellPrice,
-        uint256 newBuyPrice) public 
+    function TokenDao() public 
     {
-        balanceOf[msg.sender] = initialSupply;
-        sellPrice = newSellPrice;
-        buyPrice = newBuyPrice;
+        balanceOf[msg.sender] = 30000000;
+        sellPrice = 20 * 1 finney;
+        buyPrice = 30 * 1 finney;
         name = "Beether";
         symbol = "beeth"; 
         decimals = 2;
     }
 
-    function setDecimals(uint8 _decimals) public onlyOwner {
+    function setDecimals(uint8 _decimals) public onlyCaller {
         decimals = _decimals;
     }
     
@@ -33,7 +30,7 @@ contract TokenDao is Owned {
         return decimals;
     }
 
-    function setName(string _name) public onlyOwner {
+    function setName(string _name) public onlyCaller {
         name = _name;
     }
     
@@ -41,7 +38,7 @@ contract TokenDao is Owned {
         return name;
     }
 
-    function setSymbol(string _symbol) public onlyOwner {
+    function setSymbol(string _symbol) public onlyCaller {
         symbol = _symbol;
     }
     
@@ -53,7 +50,7 @@ contract TokenDao is Owned {
         return sellPrice;
     }
 
-    function setSellPrice(uint256 _sellPrice) public onlyOwner {
+    function setSellPrice(uint256 _sellPrice) public onlyCaller {
         sellPrice = _sellPrice;
     }
 
@@ -61,7 +58,7 @@ contract TokenDao is Owned {
         return buyPrice;
     }
 
-    function setBuyPrice(uint256 _buyPrice) public onlyOwner {
+    function setBuyPrice(uint256 _buyPrice) public onlyCaller {
         sellPrice = _buyPrice;
     }
 
@@ -69,7 +66,7 @@ contract TokenDao is Owned {
 		return balanceOf[addr];
 	}
 
-    function setBalance(address addr,uint value) public onlyOwner {
+    function setBalance(address addr,uint value) public onlyCaller {
 		balanceOf[addr] = value;
 	}
 }

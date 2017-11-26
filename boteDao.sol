@@ -1,9 +1,9 @@
 pragma solidity ^0.4.18;
 
 import './TiposCompartidos.sol';
-import './owned.sol';
+import "./called.sol";
 
-contract BoteDao is Owned {
+contract BoteDao is Called {
 
     uint internal numeroBotes;
     mapping (uint256 => TiposCompartidos.Bote) botes;
@@ -16,7 +16,7 @@ contract BoteDao is Owned {
         return numeroBotes;
     }
 
-    function setNumeroBotes(uint numero) public onlyOwner {
+    function setNumeroBotes(uint numero) public onlyCaller {
         numeroBotes = numero;
     }
 
@@ -24,7 +24,7 @@ contract BoteDao is Owned {
         return indiceBotes[indice];
     }
 
-    function setIndiceBotes(uint256 value) public onlyOwner {
+    function setIndiceBotes(uint256 value) public onlyCaller {
         indiceBotes.push(value);
     }
 
@@ -34,7 +34,7 @@ contract BoteDao is Owned {
         return (bote.premiado,bote.fechaCreacion,bote.polenes);
     }
 
-    function setBotes(address creador,uint256 _fechaCreacion,uint _polenes) public onlyOwner {
+    function setBotes(address creador,uint256 _fechaCreacion,uint _polenes) public onlyCaller {
         TiposCompartidos.Bote memory bote = TiposCompartidos.Bote({
             premiado:creador,
             fechaCreacion:_fechaCreacion,

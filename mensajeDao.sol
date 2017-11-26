@@ -1,9 +1,9 @@
 pragma solidity ^0.4.18;
 
 import './TiposCompartidos.sol';
-import './owned.sol';
+import "./called.sol";
 
-contract MensajeDao is Owned {
+contract MensajeDao is Called {
 
     uint internal numeroMensajes;
     mapping (uint256 => TiposCompartidos.Mensaje) mensajes;
@@ -30,7 +30,7 @@ contract MensajeDao is Owned {
         return numeroMensajes;
     }
 
-    function setNumeroMensajes(uint numero) public onlyOwner {
+    function setNumeroMensajes(uint numero) public onlyCaller {
         numeroMensajes = numero;
     }
 
@@ -38,7 +38,7 @@ contract MensajeDao is Owned {
         return indiceMensajes[indice];
     }
 
-    function setIndiceMensajes(uint256 value) public onlyOwner {
+    function setIndiceMensajes(uint256 value) public onlyCaller {
         indiceMensajes.push(value);
     }
 
@@ -50,7 +50,7 @@ contract MensajeDao is Owned {
         return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
-    function setMensajes(uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje,TiposCompartidos.EstadoMensaje _estado, bytes32  _motivo) public onlyOwner {
+    function setMensajes(uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje,TiposCompartidos.EstadoMensaje _estado, bytes32  _motivo) public onlyCaller {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:msg.sender,
             apodo:_apodo,

@@ -1,9 +1,9 @@
 pragma solidity ^0.4.18;
 
 import './TiposCompartidos.sol';
-import './owned.sol';
+import "./called.sol";
 
-contract CeldaDao is Owned {
+contract CeldaDao is Called {
 
     uint internal numeroCeldas;
     mapping (uint256 => TiposCompartidos.Celda) internal celdas;
@@ -33,7 +33,7 @@ contract CeldaDao is Owned {
         return numeroCeldas;
     }
 
-    function setNumeroCeldas(uint numero) public onlyOwner {
+    function setNumeroCeldas(uint numero) public onlyCaller {
         numeroCeldas = numero;
     }
 
@@ -44,30 +44,29 @@ contract CeldaDao is Owned {
             return indiceCeldas[indice];
     }
 
-    function setIndiceCeldas(uint256 value) public onlyOwner {
+    function setIndiceCeldas(uint256 value) public onlyCaller {
         indiceCeldas.push(value);
     }
 
     function getCeldas1(uint256 id) public view returns(
-        address creador, uint polenPositivos, uint polenNegativos, 
-        uint primeraPosicion, uint segundaPosicion, uint terceraPosicion,
-        uint cuartaPosicion) 
+        address creador, uint polenPositivos, uint polenNegativos, uint256 fechaCreacion,
+        uint primeraPosicion, uint segundaPosicion, uint terceraPosicion) 
     {
             TiposCompartidos.Celda memory celda = celdas[id];
-            return (celda.creador,celda.polenPositivos,celda.polenNegativos,
-            celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion, celda.cuartaPosicion);
+            return (celda.creador,celda.polenPositivos,celda.polenNegativos, celda.fechaCreacion,
+            celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion);
     }
 
     function getCeldas2(uint256 id) public view returns(
-        uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio)
+        uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio)
     {
         TiposCompartidos.Celda memory celda = celdas[id];
-        return (celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
+        return (celda.cuartaPosicion, celda.quintaPosicion, celda.sextaPosicion, celda.tipo, celda.premio);
     }
 
     function setCeldas(address _creador, uint _polenPositivos, uint _polenNegativos, uint _fechaCreacion, 
         uint _primeraPosicion, uint _segundaPosicion, uint _terceraPosicion,
-        uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TiposCompartidos.TipoPremio _tipo, bool _premio) public onlyOwner 
+        uint _cuartaPosicion, uint _quintaPosicion, uint _sextaPosicion, TiposCompartidos.TipoPremio _tipo, bool _premio) public onlyCaller 
     {
         TiposCompartidos.Celda memory celda = TiposCompartidos.Celda({
             creador:_creador,
@@ -84,8 +83,6 @@ contract CeldaDao is Owned {
             premio:_premio
         });
         celdas[_fechaCreacion] = celda;
-        indiceCeldas.push(_fechaCreacion);
-        numeroCeldas = TiposCompartidos.safeAdd(numeroCeldas,1);
     }
 
 }

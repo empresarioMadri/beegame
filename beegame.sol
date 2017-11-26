@@ -11,19 +11,19 @@ import './TiposCompartidos.sol';
 
 contract BeeGame is Owned {
 
-    address internal tokenDao = 0x65F9531E27d59DBA02F53E0d84Ae5D970C53bAC5;
+    address internal tokenDao = 0xe4a90C6C3C1909305A7EC5148Ca958c59909A473;
     TokenDao internal tokenDaoImpl = TokenDao(tokenDao);
 
-    address internal celdaDao = 0x40Db99b64abD4adD0Dd8b08b31f98b08Fbe30e40; 
+    address internal celdaDao = 0x1aA5B9d3c1E0d6898Bf6858A64bB8c450073d523; 
     CeldaDao internal celdaDaoImpl = CeldaDao(celdaDao);
 
-    address internal mensajeDao = 0x2A549682380258be06037f9bc3e9C8483E153D64;
+    address internal mensajeDao = 0x9f10797df33aeFbFED8Cd1A7a5a257Fb66AE00D9;
     MensajeDao internal mensajeDaoImpl = MensajeDao(mensajeDao);
 
-    address internal boteDao = 0x2F4c37A94083738023970e2dA0866ECd57bc86D0;
+    address internal boteDao = 0x0a49219fa06290F63524cdB35E08d9a80eE6fF70;
     BoteDao internal boteDaoImpl = BoteDao(boteDao);
 
-    address internal usuarioDao = 0xfC80a298e8F7ED72f257789A1d0701698c8E027F;
+    address internal usuarioDao = 0x2d6b5093b4Bef15985B5b31484Dc3e1252E030F7;
     UsuarioDao internal usuarioDaoImpl = UsuarioDao(usuarioDao);
     
     uint internal fechaTax;
@@ -41,9 +41,17 @@ contract BeeGame is Owned {
         boteDaoImpl = BoteDao(boteDao);
     }
 
+    function setBoteDaoCaller(address _caller) public onlyOwner {
+        boteDaoImpl.transferCallership(_caller);
+    }
+
     function setUsuarioDao(address _usuarioDao)public onlyOwner {
         usuarioDao = _usuarioDao;
         usuarioDaoImpl = UsuarioDao(usuarioDao);
+    }
+
+    function setUsuarioDaoCaller(address _caller) public onlyOwner {
+        usuarioDaoImpl.transferCallership(_caller);
     }
 
     function setCeldaDao(address _celdaDao)public onlyOwner {
@@ -51,14 +59,26 @@ contract BeeGame is Owned {
         celdaDaoImpl = CeldaDao(celdaDao);
     }
 
+    function setCeldaDaoCaller(address _caller) public onlyOwner {
+        celdaDaoImpl.transferCallership(_caller);
+    }
+
     function setMensajeDao(address _mensajeDao)public onlyOwner {
         mensajeDao = _mensajeDao;
         mensajeDaoImpl = MensajeDao(mensajeDao);
     }
 
+    function setMensajeDaoCaller(address _caller) public onlyOwner {
+        mensajeDaoImpl.transferCallership(_caller);
+    }
+
     function setTokenDao(address _tokenDao)public onlyOwner {
         tokenDao = _tokenDao;
         tokenDaoImpl = TokenDao(tokenDao);
+    }
+
+    function setTokenDaoCaller(address _caller) public onlyOwner {
+        tokenDaoImpl.transferCallership(_caller);
     }
     
     function buy() public payable {
@@ -116,7 +136,8 @@ contract BeeGame is Owned {
         );
         TiposCompartidos.Celda memory celda;
         TiposCompartidos.TipoPremio tipoPremio;
-        if (getCeldaO(_fechaCreacion).fechaCreacion == _fechaCreacion) {
+        TiposCompartidos.Celda memory celdaNew = getCeldaO(_fechaCreacion);
+        if (celdaNew.fechaCreacion == _fechaCreacion) {
             celda = getCeldaO(_fechaCreacion);
             celda.creador = msg.sender;
             celda.premio = false;
@@ -219,8 +240,7 @@ contract BeeGame is Owned {
                                             uint primeraPosicion, uint segundaPosicion, uint terceraPosicion) {
         uint256 indexA = celdaDaoImpl.getIndiceCeldas(index);                                               
         TiposCompartidos.Celda memory  celda = getCeldaO(indexA);
-        return (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion,
-        celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion);
+        return (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion, celda.primeraPosicion, celda.segundaPosicion, celda.terceraPosicion);
     }
 
     function getCelda2(uint index) public view returns (uint cuartaPosicion, uint quintaPosicion, uint sextaPosicion, TiposCompartidos.TipoPremio tipo, bool premio) {
@@ -232,15 +252,14 @@ contract BeeGame is Owned {
     
     function getCeldaO(uint256 id) internal view returns (TiposCompartidos.Celda){
         TiposCompartidos.Celda memory celda;
-        (celda.creador,celda.polenPositivos,celda.polenNegativos
+        (celda.creador,celda.polenPositivos,celda.polenNegativos,celda.fechaCreacion
         ,celda.primeraPosicion,celda.segundaPosicion
-        ,celda.terceraPosicion, celda.cuartaPosicion) = celdaDaoImpl.getCeldas1(id);
-        (celda.quintaPosicion,celda.sextaPosicion,celda.tipo,celda.premio) = celdaDaoImpl.getCeldas2(id);
-        celda.fechaCreacion = id;
+        ,celda.terceraPosicion) = celdaDaoImpl.getCeldas1(id); 
+        (celda.cuartaPosicion,celda.quintaPosicion,celda.sextaPosicion,celda.tipo,celda.premio) = celdaDaoImpl.getCeldas2(id);
         return celda;
     }
 
-    function bytes32ToStr(bytes32 _bytes32) public pure returns (string){
+    function bytes32ToStr(bytes32 _bytes32) internal pure returns (string) {
         bytes memory bytesArray = new bytes(32);
         for (uint256 i; i < 32; i++) {
             bytesArray[i] = _bytes32[i];
