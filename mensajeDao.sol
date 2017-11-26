@@ -47,17 +47,17 @@ contract MensajeDao is Owned {
         bytes32  mensaje, TiposCompartidos.EstadoMensaje estado, bytes32  motivo) {
         
         TiposCompartidos.Mensaje memory mensajeO = mensajes[id];
-        return (mensajeO.creador,TiposCompartidos.stringToBytes32(mensajeO.apodo),mensajeO.fechaCreacion,TiposCompartidos.stringToBytes32(mensajeO.mensaje),mensajeO.estado,TiposCompartidos.stringToBytes32(mensajeO.motivo));
+        return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
     function setMensajes(uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje,TiposCompartidos.EstadoMensaje _estado, bytes32  _motivo) public onlyOwner {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:msg.sender,
-            apodo:TiposCompartidos.bytes32ToStr(_apodo),
+            apodo:_apodo,
             fechaCreacion:_fechaCreacion,
-            mensaje:TiposCompartidos.bytes32ToStr(_mensaje),
+            mensaje:_mensaje,
             estado:_estado,
-            motivo:TiposCompartidos.bytes32ToStr(_motivo)
+            motivo:_motivo
         });
         mensajes[_fechaCreacion] = mensaje;
     }
