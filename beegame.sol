@@ -11,22 +11,22 @@ import 'https://github.com/empresarioMadri/beegame/TiposCompartidos.sol';
 
 contract BeeGame is Owned {
 
-    address tokenDao;
-    TokenDao tokenDaoImpl;
+    address internal tokenDao;
+    TokenDao internal tokenDaoImpl;
 
-    address celdaDao; 
-    CeldaDao celdaDaoImpl;
+    address internal celdaDao; 
+    CeldaDao internal celdaDaoImpl;
 
-    address mensajeDao;
-    MensajeDao mensajeDaoImpl;
+    address internal mensajeDao;
+    MensajeDao internal mensajeDaoImpl;
 
-    address boteDao;
-    BoteDao boteDaoImpl;
+    address internal boteDao;
+    BoteDao internal boteDaoImpl;
 
-    address usuarioDao;
-    UsuarioDao usuarioDaoImpl;
+    address internal usuarioDao;
+    UsuarioDao internal usuarioDaoImpl;
     
-    uint fechaTax;
+    uint internal fechaTax;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
 
@@ -51,6 +51,25 @@ contract BeeGame is Owned {
         
     }
     
+    function setBoteDao(address _boteDao)public onlyOwner {
+        boteDao = _boteDao;
+    }
+
+    function setUsuarioDao(address _usuarioDao)public onlyOwner {
+        usuarioDao = _usuarioDao;
+    }
+
+    function setCeldaDao(address _celdaDao)public onlyOwner {
+        celdaDao = _celdaDao;
+    }
+
+    function setMensajeDao(address _mensajeDao)public onlyOwner {
+        mensajeDao = _mensajeDao;
+    }
+
+    function setTokenDao(address _tokenDao)public onlyOwner {
+        tokenDao = _tokenDao;
+    }
     
     function buy() public payable {
         uint amount = msg.value / tokenDaoImpl.getBuyPrice();         
