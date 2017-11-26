@@ -53,11 +53,11 @@ contract MensajeDao is Owned {
         indiceMensajes.push(value);
     }
 
-    function getMensajes(uint256 id) public view returns(
+    function getMensajes(uint id) public view returns(
         address creador, bytes32  apodo, uint256 fechaCreacion, 
         bytes32  mensaje, TiposCompartidos.EstadoMensaje estado, bytes32  motivo) {
-        
-        TiposCompartidos.Mensaje memory mensajeO = mensajes[id];
+        uint256 indexA = indiceMensajes[id];
+        TiposCompartidos.Mensaje memory mensajeO = mensajes[indexA];
         return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
