@@ -9,13 +9,13 @@ contract MensajeDao is Called {
     mapping (uint256 => TiposCompartidos.Mensaje) mensajes;
     uint256[] indiceMensajes;
 
-    function MensajeDao() public {
+    function MensajeDao(address owner) public {
         numeroMensajes = 1;
         uint256 ahora = now * 1000;
         indiceMensajes.push(ahora);
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje(
             {
-                creador:msg.sender,
+                creador:owner,
                 apodo:"Admin",
                 fechaCreacion:ahora,
                 mensaje:"Welcome to beegame",

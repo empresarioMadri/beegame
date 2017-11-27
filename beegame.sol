@@ -11,19 +11,19 @@ import './TiposCompartidos.sol';
 
 contract BeeGame is Owned {
 
-    address internal tokenDao = 0xe4a90C6C3C1909305A7EC5148Ca958c59909A473;
+    address internal tokenDao = 0xB10c25d3b507d4B8AB18e07c442D8133B8D2830C;
     TokenDao internal tokenDaoImpl = TokenDao(tokenDao);
 
-    address internal celdaDao = 0x1aA5B9d3c1E0d6898Bf6858A64bB8c450073d523; 
+    address internal celdaDao = 0x93c25ed764c3DB5627Dfc82CAf4284AC01c0525F; 
     CeldaDao internal celdaDaoImpl = CeldaDao(celdaDao);
 
-    address internal mensajeDao = 0x534ac33F0fb902572206EB0455aE00Ffc39824B4;
+    address internal mensajeDao = 0x2e063c020884b16F7D4FD2511663DC0D141a9265;
     MensajeDao internal mensajeDaoImpl = MensajeDao(mensajeDao);
 
-    address internal boteDao = 0x0a49219fa06290F63524cdB35E08d9a80eE6fF70;
+    address internal boteDao = 0x26c3fa24F21936A27705B82CBEa1135a47070857;
     BoteDao internal boteDaoImpl = BoteDao(boteDao);
 
-    address internal usuarioDao = 0x2d6b5093b4Bef15985B5b31484Dc3e1252E030F7;
+    address internal usuarioDao = 0xb7bEbfdE0334eeA4D4388301AB3A755577113a79;
     UsuarioDao internal usuarioDaoImpl = UsuarioDao(usuarioDao);
     
     uint internal fechaTax;
