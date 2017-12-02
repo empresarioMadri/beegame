@@ -1,8 +1,8 @@
 pragma solidity ^0.4.18;
 
-import "./called.sol";
+import "./calledA.sol";
 
-contract UsuarioDao is Called { 
+contract UsuarioDao is CalledA { 
 
     uint internal numeroUsuarios;
     address[] indiceUsuarios;
@@ -16,7 +16,7 @@ contract UsuarioDao is Called {
         return numeroUsuarios;
     }
 
-    function setNumeroUsuarios(uint numero) public onlyCaller {
+    function setNumeroUsuarios(uint numero) public onlyCallers {
         numeroUsuarios = numero;
     }
 
@@ -24,7 +24,7 @@ contract UsuarioDao is Called {
         return indiceUsuarios[index];
     }
 
-    function setIndiceUsuarios(address usuario) public onlyCaller {
+    function setIndiceUsuarios(address usuario) public onlyCallers {
         indiceUsuarios.push(usuario);
     }
 

@@ -1,8 +1,8 @@
 pragma solidity ^0.4.18;
 
-import "./called.sol";
+import "./calledA.sol";
 
-contract TokenDao is Called {
+contract TokenDao is CalledA {
 
     address internal llamador;
     uint256 internal sellPrice;
@@ -22,7 +22,7 @@ contract TokenDao is Called {
         decimals = 2;
     }
 
-    function setDecimals(uint8 _decimals) public onlyCaller {
+    function setDecimals(uint8 _decimals) public onlyCallers {
         decimals = _decimals;
     }
     
@@ -30,7 +30,7 @@ contract TokenDao is Called {
         return decimals;
     }
 
-    function setName(string _name) public onlyCaller {
+    function setName(string _name) public onlyCallers {
         name = _name;
     }
     
@@ -38,7 +38,7 @@ contract TokenDao is Called {
         return name;
     }
 
-    function setSymbol(string _symbol) public onlyCaller {
+    function setSymbol(string _symbol) public onlyCallers {
         symbol = _symbol;
     }
     
@@ -50,7 +50,7 @@ contract TokenDao is Called {
         return sellPrice;
     }
 
-    function setSellPrice(uint256 _sellPrice) public onlyCaller {
+    function setSellPrice(uint256 _sellPrice) public onlyCallers {
         sellPrice = _sellPrice;
     }
 
@@ -58,7 +58,7 @@ contract TokenDao is Called {
         return buyPrice;
     }
 
-    function setBuyPrice(uint256 _buyPrice) public onlyCaller {
+    function setBuyPrice(uint256 _buyPrice) public onlyCallers {
         sellPrice = _buyPrice;
     }
 
@@ -66,7 +66,7 @@ contract TokenDao is Called {
 		return balanceOf[addr];
 	}
 
-    function setBalance(address addr,uint value) public onlyCaller {
+    function setBalance(address addr,uint value) public onlyCallers {
 		balanceOf[addr] = value;
 	}
 }

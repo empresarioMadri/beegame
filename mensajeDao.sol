@@ -1,21 +1,21 @@
 pragma solidity ^0.4.18;
 
 import './TiposCompartidos.sol';
-import "./called.sol";
+import "./calledA.sol";
 
-contract MensajeDao is Called {
+contract MensajeDao is CalledA {
 
     uint internal numeroMensajes;
     mapping (uint256 => TiposCompartidos.Mensaje) mensajes;
     uint256[] indiceMensajes;
 
-    function MensajeDao(address owner) public {
+    function MensajeDao() public {
         numeroMensajes = 1;
         uint256 ahora = now * 1000;
         indiceMensajes.push(ahora);
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje(
             {
-                creador:owner,
+                creador:msg.sender,
                 apodo:"Admin",
                 fechaCreacion:ahora,
                 mensaje:"Welcome to beegame",
@@ -30,7 +30,7 @@ contract MensajeDao is Called {
         return numeroMensajes;
     }
 
-    function setNumeroMensajes(uint numero) public onlyCaller {
+    function setNumeroMensajes(uint numero) public onlyCallers {
         numeroMensajes = numero;
     }
 
@@ -38,7 +38,7 @@ contract MensajeDao is Called {
         return indiceMensajes[indice];
     }
 
-    function setIndiceMensajes(uint256 value) public onlyCaller {
+    function setIndiceMensajes(uint256 value) public onlyCallers {
         indiceMensajes.push(value);
     }
 
@@ -50,7 +50,7 @@ contract MensajeDao is Called {
         return (mensajeO.creador,mensajeO.apodo,mensajeO.fechaCreacion,mensajeO.mensaje,mensajeO.estado,mensajeO.motivo);
     }
 
-    function setMensajes(address creador, uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje,TiposCompartidos.EstadoMensaje _estado, bytes32  _motivo) public onlyCaller {
+    function setMensajes(address creador, uint256 _fechaCreacion, bytes32  _apodo,bytes32  _mensaje,TiposCompartidos.EstadoMensaje _estado, bytes32  _motivo) public onlyCallers {
         TiposCompartidos.Mensaje memory mensaje = TiposCompartidos.Mensaje({
             creador:creador,
             apodo:_apodo,
